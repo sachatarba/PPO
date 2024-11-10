@@ -13,3 +13,4 @@ type Gym struct {
 	Equipments      []Equipment
 	MembershipTypes []MembershipType
 }
+  

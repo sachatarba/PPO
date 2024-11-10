@@ -88,7 +88,7 @@ func (a *AuthorizationService) Logout(ctx context.Context, sessionID uuid.UUID) 
 	}
 
 	session = entity.Session{
-		ClientID:  sessionID,
+		ClientID:  session.ClientID,
 		SessionID: session.SessionID,
 		TTL:       time.Now().Add(-10 * time.Hour),
 	}

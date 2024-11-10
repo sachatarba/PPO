@@ -32,12 +32,14 @@ func (h *ClientMembershipHandler) GetClientMemberships(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		return
 	}
 
 	memberships, err := h.clientMembershipService.ListClientMembershipsByClientID(ctx.Request.Context(), uuID)
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"clientMemberships": memberships})
@@ -52,6 +54,7 @@ func (h *ClientMembershipHandler) PostClientMembership(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		return
 	}
 
 	var req dto.PostClientMembership
@@ -101,6 +104,8 @@ func (h *ClientMembershipHandler) PutClientMembership(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	id := ctx.Param("clientMembershipId")
@@ -109,6 +114,8 @@ func (h *ClientMembershipHandler) PutClientMembership(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	err = h.clientMembershipService.ChangeClientMembership(ctx.Request.Context(), entity.ClientMembership{
@@ -139,6 +146,8 @@ func (h *ClientMembershipHandler) DeleteClientMembership(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	err = h.clientMembershipService.DeleteClientMembership(ctx.Request.Context(), uuId)

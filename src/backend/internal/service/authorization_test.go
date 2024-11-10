@@ -2,434 +2,286 @@ package service
 
 import (
 	"context"
-
+	"errors"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/ozontech/allure-go/pkg/framework/provider"
+	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/sachatarba/course-db/internal/entity"
 	"github.com/sachatarba/course-db/internal/service/mocks"
-
-	"github.com/stretchr/testify/assert"
+	"github.com/sachatarba/course-db/internal/utils/builder"
 	"github.com/stretchr/testify/mock"
 )
 
-var testClientID = func() uuid.UUID {
-	b, _ := uuid.ParseBytes([]byte("aaaaaaaaaaaaaaaa"))
-	return b
-}()
-
-var testSessionID = func() uuid.UUID {
-	b, _ := uuid.ParseBytes([]byte("bbbbbbbbbbbbbbbb"))
-	return b
-}()
-
-func TestAuthorizationService_Authorize(t *testing.T) {
-	type sessionRepoMockParams struct {
-		ctx     any
-		session any
-		err     any
-	}
-	type clientServiceMockParams struct {
-		ctx    any
-		login  any
-		client any
-		err    any
-	}
-	type args struct {
-		ctx      context.Context
-		login    string
-		password string
-	}
-	tests := []struct {
-		name        string
-		args        args
-		sessionMock sessionRepoMockParams
-		clientMock  clientServiceMockParams
-		want        entity.Session
-		wantErr     error
-	}{
-		{
-			name: "Authorization ok",
-			args: args{
-				ctx:      context.Background(),
-				login:    "sus",
-				password: "123",
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     nil,
-			},
-			clientMock: clientServiceMockParams{
-				ctx:   mock.Anything,
-				login: "sus",
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-				err: nil,
-			},
-			want: entity.Session{
-				ClientID: testClientID,
-			},
-			wantErr: nil,
-		},
-
-		{
-			name: "Authorization failed: no user",
-			args: args{
-				ctx:      context.Background(),
-				login:    "sus",
-				password: "123",
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     nil,
-			},
-			clientMock: clientServiceMockParams{
-				ctx:    mock.Anything,
-				login:  "sus",
-				client: entity.Client{},
-				err:    ErrNoSuchClient,
-			},
-			want:    entity.Session{},
-			wantErr: ErrNoSuchClient,
-		},
-
-		{
-			name: "Authorization failed: wrong password",
-			args: args{
-				ctx:      context.Background(),
-				login:    "sus",
-				password: "123",
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     nil,
-			},
-			clientMock: clientServiceMockParams{
-				ctx:   mock.Anything,
-				login: "sus",
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "1234",
-				},
-				err: ErrWrongPassword,
-			},
-			want:    entity.Session{},
-			wantErr: ErrWrongPassword,
-		},
-
-		{
-			name: "Authorization failed: sessionRepo error",
-			args: args{
-				ctx:      context.Background(),
-				login:    "sus",
-				password: "123",
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     ErrInternalSessionRepo,
-			},
-			clientMock: clientServiceMockParams{
-				ctx:   mock.Anything,
-				login: mock.Anything,
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-				err: nil,
-			},
-			want:    entity.Session{},
-			wantErr: ErrInternalSessionRepo,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sessionRepo := &mocks.ISessionRepository{}
-			clientService := &mocks.IClientService{}
-
-			sessionRepo.
-				On("CreateNewSession", tt.sessionMock.ctx, tt.sessionMock.session).
-				Return(tt.sessionMock.err)
-			clientService.
-				On("GetClientByLogin", tt.clientMock.ctx, tt.clientMock.login).
-				Return(tt.clientMock.client, tt.clientMock.err)
-
-			a := &AuthorizationService{
-				sessionRepo:   sessionRepo,
-				clientService: clientService,
-			}
-
-			got, err := a.Authorize(tt.args.ctx, tt.args.login, tt.args.password)
-
-			assert.ErrorIsf(t, err, tt.wantErr, "errors misplace")
-
-			assert.Equal(t, tt.want.ClientID, got.ClientID, "wrong client id")
-		})
-	}
+type AuthServiceSuite struct {
+	suite.Suite
 }
 
-func TestAuthorizationService_Register(t *testing.T) {
-	type clientServiceMockParams struct {
-		ctx    any
-		client any
-		err    any
-	}
-	type sessionRepoMockParams struct {
-		ctx     any
-		session any
-		err     any
-	}
-	type args struct {
-		ctx    context.Context
-		client entity.Client
-	}
-	tests := []struct {
-		name        string
-		args        args
-		sessionMock sessionRepoMockParams
-		clientMock  clientServiceMockParams
-		want        entity.Session
-		wantErr     error
-	}{
-		{
-			name: "Registration ok",
-			args: args{
-				ctx: context.Background(),
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-			},
-			clientMock: clientServiceMockParams{
-				ctx: mock.Anything,
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-				err: nil,
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     nil,
-			},
-			want: entity.Session{
-				ClientID: testClientID,
-			},
-			wantErr: nil,
-		},
+func (s *AuthServiceSuite) TestAuthServiceRegister(t provider.T) {
+	t.Title("[Register] Successfuly registered")
+	t.Tags("auth", "service", "register")
+	t.Parallel()
+	t.WithNewStep("Correct: successfully registered", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
 
-		{
-			name: "Registration fail: clientRepo error",
-			args: args{
-				ctx: context.Background(),
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-			},
-			clientMock: clientServiceMockParams{
-				ctx: mock.Anything,
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-				err: ErrInternalDB,
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     nil,
-			},
-			want:    entity.Session{},
-			wantErr: ErrInternalDB,
-		},
+		ctx := context.TODO()
+		client := builder.NewClientBuilder().Build()
 
-		{
-			name: "Registration fail: sessionRepo error",
-			args: args{
-				ctx: context.Background(),
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-			},
-			clientMock: clientServiceMockParams{
-				ctx: mock.Anything,
-				client: entity.Client{
-					ID:       testClientID,
-					Login:    "sus",
-					Password: "123",
-				},
-				err: nil,
-			},
-			sessionMock: sessionRepoMockParams{
-				ctx:     mock.Anything,
-				session: mock.Anything,
-				err:     ErrInternalSessionRepo,
-			},
-			want:    entity.Session{},
-			wantErr: ErrInternalSessionRepo,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sessionRepo := &mocks.ISessionRepository{}
-			clientService := &mocks.IClientService{}
+		sessionRepoMock.On("CreateNewSession", ctx, mock.Anything).Return(nil)
+		clientServiceMock.On("RegisterNewClient", ctx, client).Return(nil)
 
-			sessionRepo.
-				On("CreateNewSession", tt.sessionMock.ctx, tt.sessionMock.session).
-				Return(tt.sessionMock.err)
-			clientService.
-				On("RegisterNewClient", tt.clientMock.ctx, tt.clientMock.client).
-				Return(tt.clientMock.err)
+		sCtx.WithNewParameters("ctx", ctx, "client", client)
 
-			a := &AuthorizationService{
-				sessionRepo:   sessionRepo,
-				clientService: clientService,
-			}
+		session, err := authService.Register(ctx, client)
 
-			got, err := a.Register(tt.args.ctx, tt.args.client)
-
-			assert.ErrorIsf(t, err, tt.wantErr, "errors misplace")
-
-			assert.Equal(t, tt.want.ClientID, got.ClientID, "wrong client id")
-		})
-	}
+		sCtx.Assert().Equal(client.ID, session.ClientID)
+		sCtx.Assert().NoError(err)
+	})
 }
 
-func TestAuthorizationService_Logout(t *testing.T) {
-	type GetSessionBySessionIDParams struct {
-		ctx       any
-		sessionID any
-		session   entity.Session
-		err       any
-	}
-	type DeleteSessionParams struct {
-		ctx       any
-		sessionID any
-		err       any
-	}
-	type args struct {
-		ctx       context.Context
-		sessionID uuid.UUID
-	}
-	tests := []struct {
-		name              string
-		args              args
-		mockGetSession    GetSessionBySessionIDParams
-		mockDeleteSession DeleteSessionParams
-		want              entity.Session
-		wantErr           error
-	}{
-		{
-			name: "logout ok",
-			args: args{
-				ctx:       context.Background(),
-				sessionID: testSessionID,
-			},
-			mockDeleteSession: DeleteSessionParams{
-				ctx:       mock.Anything,
-				sessionID: testSessionID,
-				err:       nil,
-			},
-			mockGetSession: GetSessionBySessionIDParams{
-				ctx:       mock.Anything,
-				sessionID: testSessionID,
-				session: entity.Session{
-					ClientID:  testClientID,
-					SessionID: testSessionID,
-				},
-				err: nil,
-			},
-			want: entity.Session{
-				ClientID:  testClientID,
-				SessionID: testSessionID,
-			},
-			wantErr: nil,
-		},
+func (s *AuthServiceSuite) TestAuthServiceErrorRegister(t provider.T) {
+	t.Title("[Register] registration failed")
+	t.Tags("auth", "service", "register")
+	t.Parallel()
+	t.WithNewStep("Correct: registration falied", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
 
-		{
-			name: "logout fail: error get session",
-			args: args{
-				ctx:       context.Background(),
-				sessionID: testSessionID,
-			},
-			mockDeleteSession: DeleteSessionParams{
-				ctx:       mock.Anything,
-				sessionID: testSessionID,
-				err:       nil,
-			},
-			mockGetSession: GetSessionBySessionIDParams{
-				ctx:       mock.Anything,
-				sessionID: testSessionID,
-				session:   entity.Session{},
-				err:       ErrInternalSessionRepo,
-			},
-			want:    entity.Session{},
-			wantErr: ErrInternalSessionRepo,
-		},
+		ctx := context.TODO()
+		client := builder.NewClientBuilder().Build()
 
-		{
-			name: "logout fail: error delete session",
-			args: args{
-				ctx:       context.Background(),
-				sessionID: testSessionID,
-			},
-			mockDeleteSession: DeleteSessionParams{
-				ctx:      mock.Anything,
-				sessionID: testSessionID,
-				err:      ErrInternalSessionRepo,
-			},
-			mockGetSession: GetSessionBySessionIDParams{
-				ctx:      mock.Anything,
-				sessionID: testSessionID,
-				session: entity.Session{
-					ClientID:  testClientID,
-					SessionID: testSessionID,
-				},
-				err: nil,
-			},
-			want:    entity.Session{},
-			wantErr: ErrInternalSessionRepo,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sessionRepo := &mocks.ISessionRepository{}
-			clientService := &mocks.IClientService{}
+		sessionRepoMock.On("CreateNewSession", ctx, mock.Anything).Return(errors.New("can't create sessions"))
+		clientServiceMock.On("RegisterNewClient", ctx, client).Return(nil)
 
-			sessionRepo.
-				On("GetSessionBySessionID", tt.mockGetSession.ctx, tt.mockGetSession.sessionID).
-				Return(tt.mockGetSession.session, tt.mockGetSession.err)
-			sessionRepo.
-				On("DeleteSession", tt.mockDeleteSession.ctx, tt.mockDeleteSession.sessionID).
-				Return(tt.mockDeleteSession.err)
+		sCtx.WithNewParameters("ctx", ctx, "client", client)
 
-			a := &AuthorizationService{
-				sessionRepo:   sessionRepo,
-				clientService: clientService,
-			}
+		session, err := authService.Register(ctx, client)
 
-			got, err := a.Logout(tt.args.ctx, tt.args.sessionID)
+		sCtx.Assert().Equal(entity.Session{}, session)
+		sCtx.Assert().Error(err)
+	})
+}
 
-			assert.ErrorIsf(t, err, tt.wantErr, "errors misplace")
+func (s *AuthServiceSuite) TestAuthServiceLogout(t provider.T) {
+	t.Title("[Register] logout ok")
+	t.Tags("auth", "service", "logout")
+	t.Parallel()
+	t.WithNewStep("Correct: successfully logout", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
 
-			assert.Equal(t, tt.want.ClientID, got.ClientID, "wrong client id")
-			assert.Equal(t, tt.want.SessionID, got.SessionID, "wrong session id")
-		})
-	}
+		ctx := context.TODO()
+		client := builder.NewClientBuilder().Build()
+		session := builder.NewSessionBuilder().
+			SetSessionID(uuid.New()).
+			SetClientID(client.ID).
+			SetTTL(time.Now().Add(-10 * time.Hour)).
+			Build()
+
+		sessionRepoMock.On("GetSessionBySessionID", ctx, session.SessionID).Return(session, nil)
+		sessionRepoMock.On("DeleteSession", ctx, session.SessionID).Return(nil)
+
+		sCtx.WithNewParameters("ctx", ctx, "client", session.SessionID)
+
+		realSession, err := authService.Logout(ctx, session.SessionID)
+
+		sCtx.Assert().Equal(realSession.SessionID, session.SessionID)
+		sCtx.Assert().Equal(realSession.ClientID, session.ClientID)
+		sCtx.Assert().True(realSession.TTL.Before(time.Now()))
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthServiceErrorLogout(t provider.T) {
+	t.Title("[Register] logout failed")
+	t.Tags("auth", "service", "logout")
+	t.Parallel()
+	t.WithNewStep("Correct: logout failed", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		client := builder.NewClientBuilder().Build()
+		session := builder.NewSessionBuilder().
+			SetSessionID(uuid.New()).
+			SetClientID(client.ID).
+			SetTTL(time.Now().Add(-10 * time.Hour)).
+			Build()
+
+		sessionRepoMock.On("GetSessionBySessionID", ctx, session.SessionID).
+			Return(entity.Session{}, errors.New("can't get session"))
+
+		sessionRepoMock.On("DeleteSession", ctx, session.SessionID).
+			Return(nil)
+
+		sCtx.WithNewParameters("ctx", ctx, "client", session.SessionID)
+
+		realSession, err := authService.Logout(ctx, session.SessionID)
+
+		sCtx.Assert().Equal(entity.Session{}, realSession)
+		sCtx.Assert().Error(err)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthServiceDeleteClient(t provider.T) {
+	t.Title("[Register] delete client ok")
+	t.Tags("auth", "service", "delete client")
+	t.Parallel()
+	t.WithNewStep("Correct: delete client ok", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		id := uuid.New()
+
+		clientServiceMock.On("DeleteClient", ctx, id).
+			Return(nil)
+
+		sCtx.WithNewParameters("ctx", ctx, "id", id)
+
+		realSession, err := authService.DeleteClient(ctx, id)
+
+		sCtx.Assert().Equal(entity.Session{}, realSession)
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthServiceErrorDeleteClient(t provider.T) {
+	t.Title("[Register] delete client failed")
+	t.Tags("auth", "service", "delete client")
+	t.Parallel()
+	t.WithNewStep("Correct: delete client failed", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		id := uuid.New()
+
+		clientServiceMock.On("DeleteClient", ctx, id).
+			Return(errors.New("can't delete session"))
+
+		sCtx.WithNewParameters("ctx", ctx, "id", id)
+
+		realSession, err := authService.DeleteClient(ctx, id)
+
+		sCtx.Assert().Equal(entity.Session{}, realSession)
+		sCtx.Assert().Error(err)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthorizationServiceAuthorize(t provider.T) {
+	t.Title("[Register] authorize ok")
+	t.Tags("auth", "service", "authorize")
+	t.Parallel()
+	t.WithNewStep("Correct: authorize", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		client := builder.NewClientBuilder().Build()
+		session := builder.NewSessionBuilder().
+			SetClientID(client.ID).
+			Build()
+
+		clientServiceMock.On("GetClientByLogin", ctx, client.Login).
+			Return(client, nil)
+		sessionRepoMock.On("CreateNewSession", ctx, mock.Anything).
+			Return(nil)
+
+		sCtx.WithNewParameters("ctx", ctx, "login", client.Login, "password", client.Password)
+
+		realSession, err := authService.Authorize(ctx, client.Login, client.Password)
+
+		sCtx.Assert().Equal(session.ClientID, realSession.ClientID)
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthorizationServiceWrongPasswordAuthorize(t provider.T) {
+	t.Title("[Register] authorize ok")
+	t.Tags("auth", "service", "authorize")
+	t.Parallel()
+	t.WithNewStep("Correct: authorize", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		client := builder.NewClientBuilder().Build()
+
+		clientServiceMock.On("GetClientByLogin", ctx, client.Login).
+			Return(client, nil)
+		sessionRepoMock.On("CreateNewSession", ctx, mock.Anything).
+			Return(nil)
+
+		sCtx.WithNewParameters("ctx", ctx, "login", client.Login, "password", client.Password+"bebra")
+
+		realSession, err := authService.Authorize(ctx, client.Login, client.Password+"berba")
+
+		sCtx.Assert().Equal(entity.Session{}, realSession)
+		sCtx.Assert().ErrorIs(err, ErrWrongPassword)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthorizationServiceIsAuthorize(t provider.T) {
+	t.Title("[Register] is authorize")
+	t.Tags("auth", "service", "authorize")
+	t.Parallel()
+	t.WithNewStep("Correct: authorize", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		id := uuid.New()
+		session := builder.NewSessionBuilder().Build()
+
+		sessionRepoMock.On("GetSessionBySessionID", ctx, id).
+			Return(session, nil)
+
+		sCtx.WithNewParameters("ctx", ctx, "id", id)
+
+		realSession, err := authService.IsAuthorize(ctx, id)
+
+		sCtx.Assert().Equal(session, *realSession)
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *AuthServiceSuite) TestAuthorizationServiceErorIsAuthorize(t provider.T) {
+	t.Title("[Register] is authorize")
+	t.Tags("auth", "service", "authorize")
+	t.Parallel()
+	t.WithNewStep("Correct: is authorize failed", func(sCtx provider.StepCtx) {
+		sessionRepoMock := &mocks.ISessionRepository{}
+		clientServiceMock := &mocks.IClientService{}
+		authService := NewAuthorizationService(sessionRepoMock, clientServiceMock)
+
+		ctx := context.TODO()
+		id := uuid.New()
+
+		sessionRepoMock.On("GetSessionBySessionID", ctx, id).
+			Return(entity.Session{}, ErrSessionNotFound)
+
+		sCtx.WithNewParameters("ctx", ctx, "id", id)
+
+		realSession, err := authService.IsAuthorize(ctx, id)
+
+		sCtx.Assert().Nil(realSession)
+		sCtx.Assert().ErrorIs(err, ErrSessionNotFound)
+	})
+}
+
+func TestSuiteRunner(t *testing.T) {
+	suite.RunSuite(t, new(AuthServiceSuite))
 }

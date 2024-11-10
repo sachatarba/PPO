@@ -34,22 +34,33 @@ func (r *ClientMembershipRepo) CreateNewClientMembership(ctx context.Context, cl
 func (r *ClientMembershipRepo) ChangeClientMembership(ctx context.Context, clientMembership entity.ClientMembership) error {
 	conv := orm.NewClientMembershipConverter()
 	membership := conv.ConvertFromEntity(clientMembership)
-	tx := r.db.WithContext(ctx).UpdateColumns(&membership)
+	tx := r.db.WithContext(ctx).Model(orm.ClientMembership{ID: membership.ID}).Updates(
+		map[string]interface{}{
+			"start_date": membership.StartDate,
+			"end_date": membership.EndDate,
+		},
+	)
 
 	return tx.Error
 }
+
 func (r *ClientMembershipRepo) DeleteClientMembership(ctx context.Context, clientMembershipID uuid.UUID) error {
+	// r.db.Begin()
 	tx := r.db.WithContext(ctx).Delete(&orm.ClientMembership{
 		ID: clientMembershipID,
 	})
-
+	// r.db.Commit()
 	return tx.Error
 }
+
 func (r *ClientMembershipRepo) GetClientMembershipByID(ctx context.Context, clientMembershipID uuid.UUID) (entity.ClientMembership, error) {
 	membership := orm.ClientMembership{
 		ID: clientMembershipID,
 	}
-	tx := r.db.WithContext(ctx).Preload("MembershipType").First(membership)
+	tx := r.db.WithContext(ctx).
+	Preload("MembershipType").
+	First(&membership)
+
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		tx.Error = errors.Join(service.ErrGetByIDNotFound, tx.Error)
 	}

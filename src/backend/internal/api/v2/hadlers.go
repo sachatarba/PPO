@@ -44,7 +44,7 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 	{
 		v2 := apiV2.Group("/v2")
 		{
-			gymGroup := v2.Group("/gym")
+			gymGroup := v2.Group("/gyms")
 			{
 				gymGroup.POST("", gymHandler.PostGym)
 				gymGroup.GET("", gymHandler.GetGyms)
@@ -52,7 +52,7 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 				gymGroup.PUT("/:gymId", gymHandler.ChangeGym)
 				gymGroup.DELETE("/:gymId", gymHandler.DeleteGym)
 
-				equipmentGroup := gymGroup.Group("/:gymId/equipment")
+				equipmentGroup := gymGroup.Group("/:gymId/equipments")
 				{
 					equipmentGroup.POST("", equipmentHandler.PostEquipment)
 					equipmentGroup.GET("", equipmentHandler.GetEquipments)
@@ -60,7 +60,7 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 					equipmentGroup.DELETE("/:equipmentId", equipmentHandler.DeleteEquipment)
 				}
 
-				membershipTypeGroup := gymGroup.Group("/:gymId/membership_type")
+				membershipTypeGroup := gymGroup.Group("/:gymId/membership_types")
 				{
 					membershipTypeGroup.POST("", membershipTypeHandler.PostMembershipType)
 					membershipTypeGroup.GET("", membershipTypeHandler.GetMembershipTypeByGymID)
@@ -69,15 +69,15 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 				}
 			}
 
-			clientGroup := v2.Group("/client")
+			clientGroup := v2.Group("/clients")
 			{
-				// clientGroup.POST("", clientHandler.)
+				// clientGroup.POST("", )
 				clientGroup.GET("", clientHandler.GetClients)
 				clientGroup.GET("/:clientId", clientHandler.GetClientByID)
 				clientGroup.PUT("/:clientId", clientHandler.PutClient)
 				clientGroup.DELETE("/:clientId", clientHandler.DeleteClient)
 
-				clientMembershipGroup := clientGroup.Group("/:clientId/client_membership")
+				clientMembershipGroup := clientGroup.Group("/:clientId/client_memberships")
 				{
 					clientMembershipGroup.POST("", clientMembershipHandler.PostClientMembership)
 					clientMembershipGroup.GET("", clientMembershipHandler.GetClientMemberships)
@@ -85,7 +85,7 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 					clientMembershipGroup.DELETE("/:clientMembershipId", clientMembershipHandler.DeleteClientMembership)
 				}
 
-				scheduleGroup := clientGroup.Group("/:clientId/schedule")
+				scheduleGroup := clientGroup.Group("/:clientId/schedules")
 				{
 					scheduleGroup.POST("", scheduleHandler.PostSchedule)
 					scheduleGroup.GET("", scheduleHandler.GetSchedules)
@@ -94,7 +94,7 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 				}
 			}
 
-			trainer := v2.Group("/trainer")
+			trainer := v2.Group("/trainers")
 			{
 				trainer.POST("", trainerHandler.PostTrainer)
 				trainer.PUT("", trainerHandler.PutTrainer)
@@ -102,7 +102,7 @@ func (api *ApiHandlers) InitHandlers(router gin.IRouter) {
 				trainer.GET("", trainerHandler.GetTrainers)
 				trainer.GET("/:trainerId", trainerHandler.GetTrainersByGymID)
 
-				training := trainer.Group("/:trainerId/training")
+				training := trainer.Group("/:trainerId/trainings")
 				{
 					training.POST("", trainingHandler.PostTraining)
 					training.PUT("/:trainingId", trainingHandler.PutTraining)

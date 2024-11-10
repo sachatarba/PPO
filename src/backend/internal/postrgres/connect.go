@@ -20,8 +20,7 @@ func (connector *PostgresConnector) Connect() (*gorm.DB, error) {
 	conf := connector.Conf
 
 	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		conf.Host,
+		"host=172.17.0.1 port=%s user=%s dbname=%s password=%s sslmode=%s",
 		conf.Port,
 		conf.User,
 		conf.DBName,

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/google/uuid"
 	"github.com/sachatarba/course-db/internal/entity"
@@ -27,9 +28,14 @@ func (r *TrainerRepo) RegisterNewTrainer(ctx context.Context, trainer entity.Tra
 	var err error
 	trainerOrm := r.converter.ConvertFromEntity(trainer)
 	trainerOrm.Gyms = []*orm.Gym{}
+
+	// log.Println("berba")
+	// log.Fatalf("bebra")
 	// tx := r.db.WithContext(ctx).Create(&trainerOrm)
+	// r.db.Logger.LogMode()
 
 	for _, id := range trainer.GymsID {
+		log.Println("here")
 		err = r.db.Model(&orm.Gym{
 			ID: id,
 		}).Association("Trainers").Append(&trainerOrm)
@@ -44,6 +50,7 @@ func (r *TrainerRepo) RegisterNewTrainer(ctx context.Context, trainer entity.Tra
 
 func (r *TrainerRepo) ChangeTrainer(ctx context.Context, trainer entity.Trainer) error {
 	trainerOrm := r.converter.ConvertFromEntity(trainer)
+	trainerOrm.Gyms = []*orm.Gym{}
 	tx := r.db.WithContext(ctx).Save(&trainerOrm)
 
 	return tx.Error
@@ -74,7 +81,6 @@ func (r *TrainerRepo) ListTrainers(ctx context.Context) ([]entity.Trainer, error
 
 	return r.converter.ConvertToEntitySlice(trainerOrms), tx.Error
 }
-
 
 func (r *TrainerRepo) ListTrainersByGymID(ctx context.Context, gymID uuid.UUID) ([]entity.Trainer, error) {
 	var trainersOrmPtr []*orm.Trainer

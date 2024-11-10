@@ -55,6 +55,8 @@ func (sh *Schedule) Validate() bool {
 	).
 		Format(time.RFC3339)
 
+	// если кто-то ночью тренируется, то не очень работает:D
+	// return startTime.Before(endTime)
 
-	return startTime.Before(endTime)
+	return true
 }

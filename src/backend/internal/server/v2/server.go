@@ -25,13 +25,14 @@ type Server struct {
 }
 
 func (server *Server) Run() {
+	log.Println("Server starting..")
 	router := gin.Default()
 	router.Use(handler.CORSMiddleware)
 	router.Static("/docs", "./internal/server/v2/docs")
 	url := ginSwagger.URL("/docs/openapi.yaml")
 	log.Println(os.Getwd())
     router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
-
+	// rouer.GET()
 	router.GET("/ping", func(ctx *gin.Context) {
 		ctx.Status(http.StatusOK)
 	})

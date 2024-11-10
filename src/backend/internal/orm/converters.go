@@ -66,7 +66,7 @@ func (conv *ClientMembershipConverter) ConvertFromEntity(membership entity.Clien
 		ID:               membership.ID,
 		StartDate:        membership.StartDate,
 		EndDate:          membership.EndDate,
-		MembershipTypeID: membership.ID,
+		MembershipTypeID: membership.MembershipType.ID,
 		MembershipType:   NewMembershipTypeConverter().ConvertFromEntity(membership.MembershipType),
 		ClientID:         membership.ClientID,
 	}
@@ -152,7 +152,7 @@ func NewTrainingConverter() entity.IConverter[entity.Training, Training] {
 
 func (conv *TrainingConverter) ConvertFromEntity(training entity.Training) Training {
 	return Training{
-		ID:           training.TrainerID,
+		ID:           training.ID,
 		Title:        training.Title,
 		Description:  training.Description,
 		TrainingType: training.TrainingType,
@@ -162,7 +162,7 @@ func (conv *TrainingConverter) ConvertFromEntity(training entity.Training) Train
 
 func (conv *TrainingConverter) ConvertToEntity(training Training) entity.Training {
 	return entity.Training{
-		ID:           training.TrainerID,
+		ID:           training.ID,
 		Title:        training.Title,
 		Description:  training.Description,
 		TrainingType: training.TrainingType,

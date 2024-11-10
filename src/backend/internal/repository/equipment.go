@@ -34,7 +34,13 @@ func (r *EquipmentRepo) CreateNewEquipment(ctx context.Context, equipment entity
 
 func (r *EquipmentRepo) ChangeEquipment(ctx context.Context, equipment entity.Equipment) error {
 	equipmentOrm := orm.NewEquipmentConverter().ConvertFromEntity(equipment)
-	tx := r.db.WithContext(ctx).UpdateColumns(equipmentOrm)
+	tx := r.db.WithContext(ctx).Model(&orm.Equipment{
+		ID: equipment.ID,
+	}).UpdateColumns(&orm.Equipment{
+		Name: equipmentOrm.Name,
+		Description: equipmentOrm.Description,
+		GymID: equipmentOrm.GymID,
+	})
 
 	return tx.Error
 }

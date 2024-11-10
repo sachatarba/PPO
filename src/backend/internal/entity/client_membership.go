@@ -19,6 +19,7 @@ func (m *ClientMembership) Validate() bool {
 	if err != nil {
 		return false
 	}
+
 	m.StartDate = startDate.Format(time.DateOnly)
 
 	endDate, err := time.Parse(time.DateOnly, m.EndDate)

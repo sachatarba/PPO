@@ -8,6 +8,7 @@ import (
 )
 
 type (
+	//go:generate mockery --name IEquipmentRepository
 	IEquipmentRepository interface {
 		CreateNewEquipment(ctx context.Context, equipment entity.Equipment) error
 		ChangeEquipment(ctx context.Context, equipment entity.Equipment) error
@@ -16,6 +17,7 @@ type (
 		ListEquipmentsByGymID(ctx context.Context, gymID uuid.UUID) ([]entity.Equipment, error)
 	}
 
+	//go:generate mockery --name IGymRepository
 	IGymRepository interface {
 		RegisterNewGym(ctx context.Context, gym entity.Gym) error
 		ChangeGym(ctx context.Context, gym entity.Gym) error
@@ -24,6 +26,7 @@ type (
 		ListGyms(ctx context.Context) ([]entity.Gym, error)
 	}
 
+	//go:generate mockery --name IMembershipTypeRepository
 	IMembershipTypeRepository interface {
 		RegisterNewMembershipType(ctx context.Context, membershipType entity.MembershipType) error
 		ChangeMembershipType(ctx context.Context, membershipType entity.MembershipType) error
@@ -32,6 +35,7 @@ type (
 		ListMembershipTypesByGymID(ctx context.Context, gymID uuid.UUID) ([]entity.MembershipType, error)
 	}
 
+	//go:generate mockery --name ITrainerRepository
 	ITrainerRepository interface {
 		RegisterNewTrainer(ctx context.Context, trainer entity.Trainer) error
 		ChangeTrainer(ctx context.Context, trainer entity.Trainer) error
@@ -41,6 +45,7 @@ type (
 		ListTrainersByGymID(ctx context.Context, gymID uuid.UUID) ([]entity.Trainer, error)
 	}
 
+	//go:generate mockery --name IClientRepository
 	IClientRepository interface {
 		RegisterNewClient(ctx context.Context, client entity.Client) error
 		ChangeClient(ctx context.Context, client entity.Client) error
@@ -50,6 +55,7 @@ type (
 		ListClients(ctx context.Context) ([]entity.Client, error)
 	}
 
+	//go:generate mockery --name IClientMembershipsRepository
 	IClientMembershipsRepository interface {
 		CreateNewClientMembership(ctx context.Context, clientMembership entity.ClientMembership) error
 		ChangeClientMembership(ctx context.Context, clientMembership entity.ClientMembership) error
@@ -58,6 +64,7 @@ type (
 		ListClientMembershipsByClientID(ctx context.Context, clientID uuid.UUID) ([]entity.ClientMembership, error)
 	}
 
+	//go:generate mockery --name IScheduleRepository
 	IScheduleRepository interface {
 		CreateNewSchedule(ctx context.Context, shedule entity.Schedule) error
 		ChangeSchedule(ctx context.Context, shedule entity.Schedule) error
@@ -66,6 +73,7 @@ type (
 		ListSchedulesByClientID(ctx context.Context, clientID uuid.UUID) ([]entity.Schedule, error)
 	}
 
+	//go:generate mockery --name ITrainingRepository
 	ITrainingRepository interface {
 		CreateNewTraining(ctx context.Context, training entity.Training) error
 		ChangeTraining(ctx context.Context, training entity.Training) error

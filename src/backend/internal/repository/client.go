@@ -63,10 +63,8 @@ func (r *ClientRepo) GetClientByID(ctx context.Context, clientID uuid.UUID) (ent
 }
 
 func (r *ClientRepo) GetClientByLogin(ctx context.Context, login string) (entity.Client, error) {
-	client := &orm.Client{
-		Login: login,
-	}
-	tx := r.db.WithContext(ctx).First(client)
+	client := &orm.Client{}
+	tx := r.db.WithContext(ctx).Where("login = ?", login).First(client)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		tx.Error = errors.Join(service.ErrNoSuchClient, tx.Error)
 	}

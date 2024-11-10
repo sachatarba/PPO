@@ -9,7 +9,6 @@ import (
 
 type ScheduleService struct {
 	scheduleRepo IScheduleRepository
-	trainingRepo ITrainingRepository
 }
 
 func NewScheduleService(repository IScheduleRepository) IScheduleService {

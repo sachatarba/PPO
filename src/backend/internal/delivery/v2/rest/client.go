@@ -28,6 +28,8 @@ func (h *ClientHandler) GetClients(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"clients": clients})
@@ -42,6 +44,8 @@ func (h *ClientHandler) GetClientByLogin(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"client": client})
@@ -62,6 +66,8 @@ func (h *ClientHandler) GetClientByID(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"client": client})
@@ -85,6 +91,8 @@ func (h *ClientHandler) PutClient(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	err = h.clientService.ChangeClient(ctx.Request.Context(), entity.Client{

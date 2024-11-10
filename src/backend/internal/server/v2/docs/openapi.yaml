@@ -9,7 +9,7 @@ tags:
     description: Просмотр и управление
 
 paths:
-  /api/v2/gym:
+  /api/v2/gyms:
     post:
       operationId: postGym
       tags:
@@ -46,7 +46,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"      
   
-  /api/v2/gym/{gymId}:
+  /api/v2/gyms/{gymId}:
     get:
       operationId: getGym
       tags:
@@ -121,7 +121,34 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"
   
-  /api/v2/gym/{gymId}/equipment:
+  /api/v2/gyms/{gymId}/equipments:
+    post:
+      operationId: postEquipment
+      tags:
+        - Equipment
+      parameters:
+        - name: gymId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Equipment'
+      responses:
+        '201':
+          description: "Оборудование создано"
+        '404':
+          description: "Зал не найден"
+        '400':
+          description: "Некорректный запрос"  
+        '401':
+          description: "Неавтризован"
+        '500':
+          description: "Внутренняя ошибка сервера"
     get:
       operationId: getListEquipments
       tags:
@@ -148,33 +175,8 @@ paths:
           description: "Оборудование не найдено"  
         '500':
           description: "Внутренняя ошибка сервера"
-    post:
-      operationId: postEquipment
-      tags:
-        - Equipment
-      parameters:
-        - name: gymId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Equipment'
-      responses:
-        '201':
-          description: "Оборудование создано"
-        '400':
-          description: "Некорректный запрос"  
-        '401':
-          description: "Неавтризован"
-        '500':
-          description: "Внутренняя ошибка сервера"
           
-  /api/v2/gym/{gymId}/equipment/{equipmentId}:      
+  /api/v2/gyms/{gymId}/equipments/{equipmentId}:      
     put:
       operationId: putEquipment
       tags:
@@ -237,33 +239,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"
     
-  /api/v2/gym/{gymId}/membership_type:
-    get:
-      operationId: getListMembershipTypes
-      tags:
-        - MembershipType
-      parameters:
-        - name: gymId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid  
-      responses:
-        '200':
-          description: "Типы абонементов получены"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MembershipType'
-        '400':
-          description: "Некорректный запрос"  
-        '404':
-          description: "Абонементы не найдены"  
-        '500':
-          description: "Внутренняя ошибка сервера"
+  /api/v2/gyms/{gymId}/membership_types:
     post:
       operationId: postMembershipType
       tags:
@@ -284,13 +260,41 @@ paths:
         '201':
           description: "Типа абонмента создан"
         '400':
-          description: "Некорректный запрос"  
+          description: "Некорректный запрос"
+        '404':
+          description: "Зал не найден"
         '401':
           description: "Неавтризован"
         '500':
           description: "Внутренняя ошибка сервера"
+    get:
+      operationId: getListMembershipTypes
+      tags:
+        - MembershipType
+      parameters:
+        - name: gymId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: "Типы абонементов получены"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembershipType'
+        '400':
+          description: "Некорректный запрос"  
+        '404':
+          description: "Абонементы не найдены"  
+        '500':
+          description: "Внутренняя ошибка сервера"
   
-  /api/v2/gym/{gymId}/membership_type/{membershipTypeId}:        
+  /api/v2/gyms/{gymId}/membership_types/{membershipTypeId}:        
     put:
       operationId: putMembershipType
       tags:
@@ -353,7 +357,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"
           
-  /api/v2/client:
+  /api/v2/clients:
       post:
         operationId: postClient
         tags:
@@ -384,13 +388,13 @@ paths:
                 schema:
                   type: array
                   items:
-                    $ref: '#/components/schemas/Client'
+                    $ref: '#/components/schemas/GetClient'
           '404':
             description: "Клиенты не найдены"  
           '500':
             description: "Внутренняя ошибка сервера"      
   
-  /api/v2/client/{clientId}:
+  /api/v2/clients/{clientId}:
     get:
       operationId: getClient
       tags:
@@ -408,7 +412,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Client'
+                $ref: '#/components/schemas/GetClient'
         '400':
           description: "Некорректный запрос"  
         '404':
@@ -465,7 +469,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"
           
-  /api/v2/client/{clientId}/client_membership:
+  /api/v2/clients/{clientId}/client_memberships:
     get:
       operationId: getListClientMemberships
       tags:
@@ -477,12 +481,6 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clientMembershipId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid    
       responses:
         '200':
           description: "Клиентские абонементы получены"
@@ -521,10 +519,12 @@ paths:
           description: "Некорректный запрос"  
         '401':
           description: "Неавтризован"
+        '404':
+          description: "Клиент не найден"
         '500':
           description: "Внутренняя ошибка сервера"
   
-  /api/v2/gym/{clientId}/client_membership/{clientMembershipId}:        
+  /api/v2/clients/{clientId}/client_memberships/{clientMembershipId}:        
     put:
       operationId: putClientMembership
       tags:
@@ -587,7 +587,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"
           
-  /api/v2/client/{clientId}/schedule:
+  /api/v2/clients/{clientId}/schedules:
     get:
       operationId: getListSchedules
       tags:
@@ -598,7 +598,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid  
+            format: uuid
       responses:
         '200':
           description: "Записи на тренировку получены"
@@ -637,6 +637,8 @@ paths:
           description: "Некорректный запрос"  
         '401':
           description: "Неавтризован"
+        '404':
+          description: "Записи на тренировку не найдены" 
         '500':
           description: "Внутренняя ошибка сервера"
   
@@ -703,7 +705,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"          
   
-  /api/v2/payment:
+  /api/v2/payments:
     post:
       operationId: createPayment
       tags:
@@ -725,7 +727,7 @@ paths:
         '500':
           description: "Внутренняя ошибка сервера"
           
-  /api/v2/trainer:
+  /api/v2/trainers:
       post:
         operationId: postTrainer
         tags:
@@ -763,7 +765,7 @@ paths:
             description: "Внутренняя ошибка сервера"      
   
   
-  /api/v2/trainer/{trainerId}:
+  /api/v2/trainers/{trainerId}:
     get:
       operationId: getTrainer
       tags:
@@ -839,7 +841,7 @@ paths:
           description: "Внутренняя ошибка сервера"        
           
   
-  /api/v2/trainer/{trainerId}/training:
+  /api/v2/trainers/{trainerId}/trainings:
     get:
       operationId: getListTrainings
       tags:
@@ -850,7 +852,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid   
+            format: uuid
       responses:
         '200':
           description: "Тренировки получены"
@@ -889,10 +891,12 @@ paths:
           description: "Некорректный запрос"  
         '401':
           description: "Неавтризован"
+        '404':
+          description: "Тренер не найден"
         '500':
           description: "Внутренняя ошибка сервера"
   
-  /api/v2/trainer/{trainerId}/training/{trainingId}:        
+  /api/v2/trainers/{trainerId}/trainings/{trainingId}:        
     put:
       operationId: putTraining
       tags:
@@ -977,7 +981,7 @@ components:
         addres:
           type: string
           description: "Адрес спортзала"
-        ischain:
+        is_chain:
           type: boolean
           description: "Флаг, указывающий, является ли спортзал частью сети"
 
@@ -988,7 +992,7 @@ components:
         - phone
         - city
         - addres
-        - ischain
+        - is_chain
       properties:
         name:
           type: string
@@ -1159,8 +1163,8 @@ components:
         - type
         - description
         - price
-        - daysduration
-        - gymid
+        - days_duration
+        - gym_id
       properties:
         id:
           type: string
@@ -1175,13 +1179,9 @@ components:
         price:
           type: string
           description: "Цена членства"
-        daysduration:
+        days_duration:
           type: integer
           description: "Количество дней действия членства"
-        gymid:
-          type: string
-          format: uuid
-          description: "Уникальный идентификатор спортзала, к которому относится тип членства в формате UUID"
     
     PutMembershipType:
       type: object
@@ -1189,7 +1189,7 @@ components:
         - type
         - description
         - price
-        - daysduration
+        - days_duration
       properties:
         type:
           type: string
@@ -1200,10 +1200,40 @@ components:
         price:
           type: string
           description: "Цена членства"
-        daysduration:
+        days_duration:
           type: integer
           description: "Количество дней действия членства"
-          
+    GetClient:
+      type: object
+      required:
+        - id
+        - fullname
+        - login
+        - birthdate
+        - email
+        - phone
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: "Уникальный идентификатор клиента в формате UUID"
+        fullname:
+          type: string
+          description: "Полное имя клиента"
+        login:
+          type: string
+          description: "Логин клиента"
+        birthdate:
+          type: string
+          format: date
+          description: "Дата рождения клиента в формате YYYY-MM-DD"
+        email:
+          type: string
+          format: email
+          description: "Электронная почта клиента"
+        phone:
+          type: string
+          description: "Телефон клиента"      
     Client:
       type: object
       required:
@@ -1275,59 +1305,51 @@ components:
       type: object
       required:
         - id
-        - startdate
-        - enddate
-        - membershiptypeid
-        - clientid
+        - start_date
+        - end_date
+        - membership_type_id
       properties:
         id:
           type: string
           format: uuid
           description: "Уникальный идентификатор членства клиента в формате UUID"
-        startdate:
+        start_date:
           type: string
           format: date
           description: "Дата начала членства в формате YYYY-MM-DD"
-        enddate:
+        end_date:
           type: string
           format: date
           description: "Дата окончания членства в формате YYYY-MM-DD"
-        membershiptypeid:
+        membership_type_id:
           type: string
           format: uuid
           description: "Уникальный идентификатор типа членства в формате UUID"
-        clientid:
-          type: string
-          format: uuid
-          description: "Уникальный идентификатор клиента в формате UUID"
           
     PutClientMembership:
       type: object
       required:
-        - startdate
-        - enddate
-        - membershiptypeid
+        - star_tdate
+        - end_date
+        - membership_type_id
       properties:
         id:
           type: string
           format: uuid
           description: "Уникальный идентификатор членства клиента в формате UUID"
-        startdate:
+        start_date:
           type: string
           format: date
           description: "Дата начала членства в формате YYYY-MM-DD"
-        enddate:
+        end_date:
           type: string
           format: date
           description: "Дата окончания членства в формате YYYY-MM-DD"
-        membershiptypeid:
+        membership_type_id:
           type: string
           format: uuid
           description: "Уникальный идентификатор типа членства в формате UUID"
-        clientid:
-          type: string
-          format: uuid
-          description: "Уникальный идентификатор клиента в формате UUID"
+
           
     Trainer:
       type: object
@@ -1337,8 +1359,8 @@ components:
         - email
         - phone
         - qualification
-        - unitprice
-        - gymsid
+        - unit_price
+        - gyms_id
       properties:
         id:
           type: string
@@ -1357,11 +1379,11 @@ components:
         qualification:
           type: string
           description: "Квалификация тренера"
-        unitprice:
+        unit_price:
           type: number
           format: float
           description: "Цена за единицу услуг тренера"
-        gymsid:
+        gyms_id:
           type: array
           items:
             type: string
@@ -1375,8 +1397,8 @@ components:
         - email
         - phone
         - qualification
-        - unitprice
-        - gymsid
+        - unit_price
+        - gyms_id
       properties:
         id:
           type: string
@@ -1395,11 +1417,11 @@ components:
         qualification:
           type: string
           description: "Квалификация тренера"
-        unitprice:
+        unit_price:
           type: number
           format: float
           description: "Цена за единицу услуг тренера"
-        gymsid:
+        gyms_id:
           type: array
           items:
             type: string
@@ -1412,8 +1434,7 @@ components:
         - id
         - title
         - description
-        - trainingType
-        - trainerId
+        - training_type
       properties:
         id:
           type: string
@@ -1425,20 +1446,16 @@ components:
         description:
           type: string
           description: "Описание тренировки"
-        trainingType:
+        training_type:
           type: string
           description: "Тип тренировки"
-        trainerId:
-          type: string
-          format: uuid
-          description: "Уникальный идентификатор тренера в формате UUID"
     
     PutTraining:
       type: object
       required:
         - title
         - description
-        - trainingType
+        - training_type
       properties:
         title:
           type: string
@@ -1454,32 +1471,27 @@ components:
       type: object
       required:
         - id
-        - dayoftheweek
-        - starttime
-        - endtime
-        - clientid
-        - trainingid
+        - day_of_the_week
+        - start_time
+        - end_time
+        - training_id
       properties:
         id:
           type: string
           format: uuid
           description: "Уникальный идентификатор расписания в формате UUID"
-        dayoftheweek:
+        day_of_the_week:
           type: string
           description: "День недели, когда запланирована тренировка"
-        starttime:
+        start_time:
           type: string
           format: time
           description: "Время начала тренировки в формате HH:MM"
-        endtime:
+        end_time:
           type: string
           format: time
           description: "Время окончания тренировки в формате HH:MM"
-        clientid:
-          type: string
-          format: uuid
-          description: "Уникальный идентификатор клиента в формате UUID"
-        trainingid:
+        training_id:
           type: string
           format: uuid
           description: "Уникальный идентификатор тренировки в формате UUID"
@@ -1489,11 +1501,10 @@ components:
       type: object
       required:
         - id
-        - dayoftheweek
-        - starttime
-        - endtime
-        - clientid
-        - trainingid
+        - day_of_the_week
+        - start_time
+        - end_time
+        - training_id
       properties:
         dayoftheweek:
           type: string

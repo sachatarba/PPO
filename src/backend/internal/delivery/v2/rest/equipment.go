@@ -30,12 +30,16 @@ func (h *EquipmentHandler) GetEquipments(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	equipments, err := h.equipmentService.ListEquipmentsByGymID(ctx.Request.Context(), uuID)
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"equipments": equipments})
@@ -60,6 +64,8 @@ func (h *EquipmentHandler) PostEquipment(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	err = h.equipmentService.CreateNewEquipment(ctx.Request.Context(), entity.Equipment{
@@ -96,6 +102,8 @@ func (h *EquipmentHandler) PutEquipment(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	id = ctx.Param("equipmentId")
@@ -104,6 +112,8 @@ func (h *EquipmentHandler) PutEquipment(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	err = h.equipmentService.ChangeEquipment(ctx.Request.Context(), entity.Equipment{

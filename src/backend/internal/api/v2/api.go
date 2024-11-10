@@ -55,6 +55,8 @@ func (api *ApiServer) Run() {
 	// 	return
 	// }
 
+	log.Print("bebra")
+
 	server := server.Server{
 		// PaymentHandler: paymentHandler,
 		Handlers: &ApiHandlers{

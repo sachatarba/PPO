@@ -106,6 +106,8 @@ func (h *GymHandler) ChangeGym(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
 	}
 
 	err = h.gymService.ChangeGym(ctx.Request.Context(), entity.Gym{
