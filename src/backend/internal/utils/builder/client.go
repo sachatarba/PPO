@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sachatarba/course-db/internal/entity"
+	"github.com/go-faker/faker/v4"
 )
 
 type ClientBuilder struct {
@@ -15,7 +16,7 @@ func NewClientBuilder() *ClientBuilder {
 	return &ClientBuilder{
 		client: entity.Client{
 			ID:                uuid.New(),
-			Login:             "test_login",
+			Login:             faker.FirstName(),
 			Password:          "password123",
 			Fullname:          "Test User",
 			Email:             "test@example.com",

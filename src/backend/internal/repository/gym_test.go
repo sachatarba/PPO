@@ -9,6 +9,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
+	"github.com/sachatarba/course-db/internal/config"
+	"github.com/sachatarba/course-db/internal/entity"
+	"github.com/sachatarba/course-db/internal/orm"
+	postrgres_adapter "github.com/sachatarba/course-db/internal/postrgres"
 	"github.com/sachatarba/course-db/internal/repository/mocks"
 	"github.com/sachatarba/course-db/internal/service"
 	"github.com/sachatarba/course-db/internal/utils/builder"
@@ -19,6 +23,9 @@ type GymRepoSuite struct {
 
 	mock    sqlmock.Sqlmock
 	gymRepo service.IGymRepository
+
+	ctx  context.Context
+	repo service.IGymRepository
 }
 
 func (s *GymRepoSuite) BeforeEach(t provider.T) {
@@ -29,6 +36,28 @@ func (s *GymRepoSuite) BeforeEach(t provider.T) {
 	s.mock = mock
 
 	t.Tags("fixture", "gym", "db")
+}
+
+func (s *GymRepoSuite) BeforeAll(t provider.T) {
+	s.ctx = context.Background()
+	conf := config.NewConfFromEnv()
+
+	postgresConnector := postrgres_adapter.PostgresConnector{
+		Conf: conf.PostgresConf,
+	}
+
+	db, err := postgresConnector.Connect()
+	t.Assert().NoError(err, "Error connection db")
+
+	postgresMigrator := postrgres_adapter.PostgresMigrator{
+		DB:     db,
+		Tables: orm.TablesORM,
+	}
+
+	err = postgresMigrator.Migrate()
+	t.Assert().NoError(err, "Error migration db")
+
+	s.repo = NewGymRepo(db)
 }
 
 func (s *GymRepoSuite) TestRegisterNewGym(t provider.T) {
@@ -171,6 +200,119 @@ func (s *GymRepoSuite) TestListGyms(t provider.T) {
 		err = s.mock.ExpectationsWereMet()
 		sCtx.Assert().NoError(err)
 	})
+}
+
+type testCase int
+
+const (
+	REGISTER = iota
+	CHANGE
+	DELETE
+	GET_BY_ID
+)
+
+func (s *GymRepoSuite) TestGymOperations(t provider.T) {
+	testCases := []struct {
+		name            testCase
+		gym             entity.Gym
+		expectedName    string
+		expectedCity    string
+		expectedSuccess bool
+	}{
+		{
+			name: REGISTER,
+			gym: entity.Gym{
+				ID:      uuid.New(),
+				Name:    "Test Gym",
+				Phone:   "+7-999-999-99-99",
+				City:    "Test City",
+				Addres:  "Test Address",
+				IsChain: false,
+			},
+			expectedName:    "Test Gym",
+			expectedCity:    "Test City",
+			expectedSuccess: true,
+		},
+		{
+			name: CHANGE,
+			gym: entity.Gym{
+				ID:      uuid.New(),
+				Name:    "Test Gym",
+				Phone:   "+7-999-999-99-99",
+				City:    "Test City",
+				Addres:  "Test Address",
+				IsChain: false,
+			},
+			expectedName:    "Updated Gym Name",
+			expectedSuccess: true,
+		},
+		{
+			name: DELETE,
+			gym: entity.Gym{
+				ID:      uuid.New(),
+				Name:    "Test Gym",
+				Phone:   "+7-999-999-99-99",
+				City:    "Test City",
+				Addres:  "Test Address",
+				IsChain: false,
+			},
+			expectedSuccess: true,
+		},
+		{
+			name: GET_BY_ID,
+			gym: entity.Gym{
+				ID:      uuid.New(),
+				Name:    "Test Gym",
+				Phone:   "+7-999-999-99-99",
+				City:    "Test City",
+				Addres:  "Test Address",
+				IsChain: false,
+			},
+			expectedName:    "Test Gym",
+			expectedCity:    "Test City",
+			expectedSuccess: true,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("Gym test with data base: %d",tc.name), func(t provider.T) {
+			t.WithNewStep("Gym case", func(sCtx provider.StepCtx) {
+				switch tc.name {
+				case REGISTER:
+					err := s.repo.RegisterNewGym(s.ctx, tc.gym)
+					t.Assert().Equal(tc.expectedSuccess, err == nil)
+
+				case CHANGE:
+					err := s.repo.RegisterNewGym(s.ctx, tc.gym)
+					t.Assert().NoError(err)
+
+					tc.gym.Name = "Updated Gym Name"
+
+					err = s.repo.ChangeGym(s.ctx, tc.gym)
+					t.Assert().Equal(tc.expectedSuccess, err == nil)
+
+				case DELETE:
+					err := s.repo.RegisterNewGym(s.ctx, tc.gym)
+					t.Assert().NoError(err)
+
+					err = s.repo.DeleteGym(s.ctx, tc.gym.ID)
+					t.Assert().Equal(tc.expectedSuccess, err == nil)
+
+				case GET_BY_ID:
+					err := s.repo.RegisterNewGym(s.ctx, tc.gym)
+					t.Assert().NoError(err)
+
+					retGym, err := s.repo.GetGymByID(s.ctx, tc.gym.ID)
+					t.Assert().Equal(tc.expectedSuccess, err == nil)
+					if tc.expectedSuccess {
+						t.Assert().Equal(tc.expectedName, retGym.Name)
+						t.Assert().Equal(tc.gym.Name, retGym.Name)
+						t.Assert().Equal(tc.gym.City, retGym.City)
+					}
+				}
+			})
+		})
+	}
 }
 
 func TestGymSuiteRunner(t *testing.T) {
