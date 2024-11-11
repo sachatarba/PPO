@@ -1,0 +1,57 @@
+version: "3.9"
+services:
+  # postgres:
+  #   image: postgres
+  #   environment:
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_USER=postgres
+  #     # - POSTGRES_DB=${POSTGRES_DB}
+  #     # - PGDATA=${PGDATA}
+  #   ports:
+  #     - "5432:5432"
+  #   # volumes: 
+  #     # - ./db/migrations/:/docker-entrypoint-initdb.d
+  #     # - ../.:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U gym -d gym"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 10s
+  #   restart: always
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: 4G
+  #   networks:
+  #     - net
+  golang-api-v1:
+    build:
+      context: .
+      dockerfile: apiV1.Dockerfile 
+    # ports:
+    #   - "${GOLANG_API_V1_PORT}:${GOLANG_API_V1_PORT}"
+    # environment:
+    #   - POSTGRES_HOST=${POSTGRES_HOST}
+    #   - POSTGRES_PORT=${POSTGRES_PORT}
+    #   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    #   - POSTGRES_USER=${POSTGRES_USER}
+    #   - POSTGRES_DB=${POSTGRES_DB}
+    #   - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+    #   - REDIS_HOST=${REDIS_HOST}
+    #   - REDIS_PORT=${REDIS_PORT}
+    #   - REDIS_PASSWORD=${REDIS_PASSWORD}
+    #   - GOLANG_HOST=${GOLANG_HOST}
+    #   - GOLANG_PORT=${GOLANG_API_V1_PORT}
+    #   - API_KEY=${API_KEY}
+    #   - SHOP_ID=${SHOP_ID}
+    # depends_on:
+      # - postgres
+      # - redis
+    networks:
+      - net
+    
+
+networks:
+  net:
