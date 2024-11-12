@@ -26,7 +26,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          docker-compose -f src/backend/tests/unit/docker-compose-up.yaml up --abort-on-container-exit --build
+          docker-compose -f src/backend/tests/unit/docker-compose-up.yml up --abort-on-container-exit --build
           
       - name: Save Allure results from unit tests
         if: success()  # Этот шаг выполняется только если unit-тесты успешны
@@ -48,7 +48,7 @@ jobs:
 
       - name: Run integration tests
         run: |
-          docker-compose -f src/backend/tests/integration/deployment/docker-compose-up.yaml up --abort-on-container-exit --build
+          docker-compose -f src/backend/tests/integration/deployment/docker-compose-up.yml up --abort-on-container-exit --build
           
       - name: Save Allure results from integration tests
         uses: actions/upload-artifact@v3
