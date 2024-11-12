@@ -52,7 +52,7 @@ services:
     ports:
       - "${GOLANG_PORT}:${GOLANG_PORT}"
     environment:
-      - ALLURE_OUTPUT_PATH=/app
+      - ALLURE_OUTPUT_PATH=${ALLURE_OUTPUT_PATH}
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
