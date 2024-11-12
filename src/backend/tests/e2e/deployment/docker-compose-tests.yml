@@ -1,0 +1,96 @@
+# sudo docker exec -it f7d48f8654da /bin/bash - нужен id контейнера
+# psql -U gym -d gym
+version: "3.9"
+services:
+  postgres-test:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGDATA=${PGDATA}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gym -d gym"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - net
+  redis-test:
+    image: redis:latest
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - /path/to/local/data:/root/redis
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    # environment:
+      # - REDIS_PASSWORD=${REDIS_PASSWORD}
+      # - REDIS_PORT=${REDIS_PORT}
+      # - REDIS_DATABASES=${REDIS_DATABASES}
+    command: ["redis-server", "--databases", "${REDIS_DATABASES}", "--requirepass", "${REDIS_PASSWORD}"]
+    networks:
+      - net
+  golang-api-v1:
+    build:
+      context: ../../../
+      dockerfile: ./tests/e2e/deployment/apiV1.Dockerfile 
+    ports:
+      - "${GOLANG_API_V1_PORT}:${GOLANG_API_V1_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=localhost
+      - GOLANG_PORT=${GOLANG_API_V1_PORT}
+      - API_KEY=${API_KEY}
+      - SHOP_ID=${SHOP_ID}
+    depends_on:
+      - postgres-test
+      - redis-test
+    networks:
+      - net
+  golang-test:
+    build:
+      context: ../../../
+      dockerfile: ./tests/e2e/deployment/tests.Dockerfile
+    volumes:
+      - ../../../allure-results:/app/tests/e2e/allure-results
+    ports:
+      - "${GOLANG_TEST_PORT}:${GOLANG_TEST_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=${GOLANG_HOST}
+      - GOLANG_PORT=${GOLANG_API_V1_PORT}
+    depends_on:
+      - postgres-test
+      - redis-test
+      - golang-api-v1
+    networks:
+      - net
+
+networks:
+  net:

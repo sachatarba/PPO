@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,6 +18,7 @@ type ClientMembership struct {
 func (m *ClientMembership) Validate() bool {
 	startDate, err := time.Parse(time.DateOnly, m.StartDate)
 	if err != nil {
+		log.Println("start:", startDate, err)
 		return false
 	}
 
@@ -24,9 +26,14 @@ func (m *ClientMembership) Validate() bool {
 
 	endDate, err := time.Parse(time.DateOnly, m.EndDate)
 	if err != nil {
+		log.Println("end:", startDate, err)
 		return false
 	}
 	m.EndDate = endDate.Format(time.DateOnly)
+
+	if (!startDate.Before(endDate)) {
+		log.Println("not before:")
+	}
 
 	return startDate.Before(endDate)
 }

@@ -3,10 +3,10 @@ name: Test Pipeline
 on:
   push:
     branches:
-      - testing-and-web  # или другая ветка, по которой вы хотите запускать тесты
+      - testing-and-web  
   pull_request:
     branches:
-      - testing-and-web  # или другая ветка, для которой вы хотите запускать тесты при PR
+      - testing-and-web  
 
 jobs:
   unit_tests:
@@ -19,11 +19,10 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version  # Проверка установки
-      
+        uses: KengoTODA/actions-setup-docker-compose@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create .env
         run: |
           echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/tests/unit/.env
@@ -31,13 +30,11 @@ jobs:
           cat src/backend/tests/unit/.env
 
       - name: Run unit tests
-        # run: |
-        #   pwd && ls 
         run: |
           docker-compose -f src/backend/tests/unit/docker-compose-tests.yml up --abort-on-container-exit --build
           
       - name: Save Allure results from unit tests
-        if: success()  # Этот шаг выполняется только если unit-тесты успешны
+        # if: success()
         uses: actions/upload-artifact@v3
         with:
           name: allure-results
@@ -45,14 +42,20 @@ jobs:
 
   integration_tests:
     runs-on: ubuntu-latest
-    needs: unit_tests  # Этот job будет зависеть от успешности предыдущего job
-    if: success()  # Этот job запускается только если unit_tests успешны
+    needs: unit_tests
+    if: success()
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        uses: KengoTODA/actions-setup-docker-compose@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Run integration tests
         run: |
@@ -63,10 +66,37 @@ jobs:
         with:
           name: allure-results
           path: src/backend/allure-results/
+
+  e2e_tests:
+    runs-on: ubuntu-latest
+    needs: [unit_tests, integration_tests]
+    if: success()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        uses: KengoTODA/actions-setup-docker-compose@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Run e2e tests
+        run: |
+          docker-compose -f src/backend/tests/e2e/deployment/docker-compose-tests.yml up --abort-on-container-exit --build
+          
+      - name: Save Allure results from integration tests
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: src/backend/allure-results/
           
   report:
     runs-on: ubuntu-latest
-    needs: [unit_tests, integration_tests]  # Этот job зависит от завершения unit и integration тестов
+    needs: [unit_tests, integration_tests, e2e_tests]  
     steps:
       - name: Download Allure results
         uses: actions/download-artifact@v3
