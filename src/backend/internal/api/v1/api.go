@@ -27,13 +27,13 @@ func (api *ApiServer) Run() {
 
 	db, err := postgresConnector.Connect()
 	if err != nil {
-		log.Print("Cant connect postgres", err)
+		log.Fatal("Cant connect postgres", err)
 		return
 	}
 
 	rdb := redisConnector.Connect()
 	if rdb == nil {
-		log.Print("Cant connect redis", err)
+		log.Fatal("Cant connect redis", err)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (api *ApiServer) Run() {
 
 	err = postgresMigrator.Migrate()
 	if err != nil {
-		log.Print("Cant migrate", err)
+		log.Fatal("Cant migrate", err)
 		return
 	}
 
@@ -60,14 +60,14 @@ func (api *ApiServer) Run() {
 
 	services, err := director.NewServices()
 	if err != nil {
-		log.Print("Cant create services", err)
+		log.Fatal("Cant create services", err)
 		return
 	}
 
 	server := server.Server{
 		PaymentHandler: paymentHandler,
-		Handler: handler.NewHandler(*services),
-		Conf:    &config.ServerConfig{},
+		Handler:        handler.NewHandler(*services),
+		Conf:           &config.ServerConfig{},
 	}
 
 	server.Run()
