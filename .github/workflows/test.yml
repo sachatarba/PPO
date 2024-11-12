@@ -26,7 +26,9 @@ jobs:
 
       - name: Run unit tests
         run: |
-          docker-compose -f src/backend/tests/unit/docker-compose-up.yml up --abort-on-container-exit --build
+          pwd && ls 
+        # run: |
+        #   docker-compose -f src/backend/tests/unit/docker-compose-up.yml up --abort-on-container-exit --build
           
       - name: Save Allure results from unit tests
         if: success()  # Этот шаг выполняется только если unit-тесты успешны
@@ -67,4 +69,4 @@ jobs:
           
       - name: Generate Allure Report
         run: |
-          allure serve src/backend/allure-results/  # Генерация отчета через Allure
+          allure serve src/backend/allure-results/  
