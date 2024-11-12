@@ -75,7 +75,7 @@ jobs:
 
   e2e_tests:
     runs-on: ubuntu-latest
-    needs: [unit_tests, integration_tests]
+    # needs: [unit_tests, integration_tests]
     if: success()
     steps:
       - name: Checkout code
@@ -108,7 +108,7 @@ jobs:
           
   report:
     runs-on: ubuntu-latest
-    needs: [unit_tests, integration_tests, e2e_tests]  
+    # needs: [unit_tests, integration_tests, e2e_tests]  
     steps:
       - name: Download Allure results
         uses: actions/download-artifact@v3
