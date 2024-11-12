@@ -52,7 +52,7 @@ jobs:
         run: |
           echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/tests/integration/deployment/.env
           # ls -al src/backend/
-          cat src/backend/tests/unit/.env
+          # cat src/backend/tests/unit/.env
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
@@ -85,7 +85,7 @@ jobs:
         run: |
           echo "${{ vars.E2E_TEST_ENV }}" > src/backend/tests/e2e/deployment/.env
           # ls -al src/backend/
-          cat src/backend/tests/unit/.env
+          # cat src/backend/tests/unit/.env
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
