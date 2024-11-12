@@ -26,9 +26,9 @@ jobs:
       
       - name: Create .env
         run: |
-          echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/.env
+          echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/tests/unit/.env
           # ls -al src/backend/
-          cat src/backend/.env
+          cat src/backend/tests/unit/.env
 
       - name: Run unit tests
         # run: |
