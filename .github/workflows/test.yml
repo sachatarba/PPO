@@ -44,8 +44,8 @@ jobs:
           # echo GOLANG_API_V1_PORT=${{ vars.GOLANG_API_V1_PORT }} >> .env
           # echo GOLANG_API_V2_PORT=${{ vars.GOLANG_API_V2_PORT }} >> .env
           
-          # # API_KEY=${{ vars.API_KEY }} >> .env
-          # # SHOP_ID=${{ vars.API_KEY }} >> .env
+          # API_KEY=${{ vars.API_KEY }} >> .env
+          # SHOP_ID=${{ vars.API_KEY }} >> .env
 
       - name: Run unit tests
         # run: |
