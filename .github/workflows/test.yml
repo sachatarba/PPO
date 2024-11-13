@@ -58,7 +58,7 @@ jobs:
       - name: Add skipping flag to integration tests
         env:
           SKIP: ${{ needs.unit_tests.outputs.skip }} 
-        if: ${{ SKIP == "true" }}
+        if: ${{ env.SKIP == "true" }}
         run: |
           echo "$SKIP" >> src/backend/tests/integration/deployment/.env
           # echo $env.SKIP >> src/backend/tests/integration/deployment/.env
