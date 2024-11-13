@@ -9,8 +9,6 @@ on:
       - testing-and-web  
 
 jobs:
-  ls:
-    
   unit_tests:
     outputs:
       skip: ${{ steps.set_skip.outputs.skip }}
