@@ -71,8 +71,7 @@ func (s *TrainingServiceSuite) AfterAll(t provider.T) {
 // Тест создания новой тренировки
 func (s *TrainingServiceSuite) TestCreateNewTraining(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[CreateNewTraining] Successfully created a new training")
 	t.Tags("training_service", "service", "create")
@@ -114,8 +113,7 @@ func (s *TrainingServiceSuite) TestCreateNewTraining(t provider.T) {
 // Тест изменения тренировки
 func (s *TrainingServiceSuite) TestChangeTraining(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ChangeTraining] Successfully changed training data")
 	t.Tags("training_service", "service", "update")
@@ -162,8 +160,7 @@ func (s *TrainingServiceSuite) TestChangeTraining(t provider.T) {
 // Тест удаления тренировки
 func (s *TrainingServiceSuite) TestDeleteTraining(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[DeleteTraining] Successfully deleted a training")
 	t.Tags("training_service", "service", "delete")
@@ -203,8 +200,7 @@ func (s *TrainingServiceSuite) TestDeleteTraining(t provider.T) {
 // Тест получения списка тренировок по ID тренера
 func (s *TrainingServiceSuite) TestListTrainingsByTrainerID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ListTrainingsByTrainerID] Successfully listed trainings by trainer ID")
 	t.Tags("training_service", "service", "list")

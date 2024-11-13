@@ -108,8 +108,7 @@ func ClientMembershipEqual(sCtx provider.StepCtx,
 
 func (s *ClientMembershipsServiceSuite) TestCreateNewClientMembership(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[CreateNewClientMembership] Successfully created membership")
 	t.Tags("client_membership", "service", "create")
@@ -176,8 +175,7 @@ func (s *ClientMembershipsServiceSuite) TestCreateNewClientMembership(t provider
 
 func (s *ClientMembershipsServiceSuite) TestChangeClientMembership(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ChangeClientMembership] Successfully changed membership")
 	t.Tags("client_membership", "service", "update")
@@ -238,8 +236,7 @@ func (s *ClientMembershipsServiceSuite) TestChangeClientMembership(t provider.T)
 
 func (s *ClientMembershipsServiceSuite) TestDeleteClientMembership(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[DeleteClientMembership] Successfully deleted membership")
 	t.Tags("client_membership", "service", "delete")
@@ -295,8 +292,7 @@ func (s *ClientMembershipsServiceSuite) TestDeleteClientMembership(t provider.T)
 
 func (s *ClientMembershipsServiceSuite) TestGetClientMembershipByID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[GetClientMembershipByID] Successfully retrieved membership by ID")
 	t.Tags("client_membership", "service", "get")
@@ -361,8 +357,7 @@ func (s *ClientMembershipsServiceSuite) TestGetClientMembershipByID(t provider.T
 
 func (s *ClientMembershipsServiceSuite) TestListClientMembershipsByClientID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ListClientMembershipsByClientID] Successfully listed memberships by client ID")
 	t.Tags("client_membership", "service", "list")

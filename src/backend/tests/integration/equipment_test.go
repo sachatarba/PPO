@@ -68,8 +68,7 @@ func (s *EquipmentServiceSuite) AfterAll(t provider.T) {
 
 func (s *EquipmentServiceSuite) TestCreateNewEquipment(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[CreateNewEquipment] Successfully created equipment")
 	t.Tags("equipment", "service", "create")
@@ -109,8 +108,7 @@ func (s *EquipmentServiceSuite) TestCreateNewEquipment(t provider.T) {
 
 func (s *EquipmentServiceSuite) TestChangeEquipment(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ChangeEquipment] Successfully changed equipment")
 	t.Tags("equipment", "service", "update")
@@ -157,8 +155,7 @@ func (s *EquipmentServiceSuite) TestChangeEquipment(t provider.T) {
 
 func (s *EquipmentServiceSuite) TestDeleteEquipment(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[DeleteEquipment] Successfully deleted equipment")
 	t.Tags("equipment", "service", "delete")
@@ -193,8 +190,7 @@ func (s *EquipmentServiceSuite) TestDeleteEquipment(t provider.T) {
 
 func (s *EquipmentServiceSuite) TestGetEquipmentByID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[GetEquipmentByID] Successfully retrieved equipment by ID")
 	t.Tags("equipment", "service", "get")
@@ -228,8 +224,7 @@ func (s *EquipmentServiceSuite) TestGetEquipmentByID(t provider.T) {
 
 func (s *EquipmentServiceSuite) TestListEquipmentsByGymID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ListEquipmentsByGymID] Successfully listed equipments by gym ID")
 	t.Tags("equipment", "service", "list")

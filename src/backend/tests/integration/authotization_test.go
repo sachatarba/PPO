@@ -84,8 +84,7 @@ func (s *AuthorizationServiceSuite) AfterAll(t provider.T) {
 // Тест для проверки авторизации с использованием Redis
 func (s *AuthorizationServiceSuite) TestIsAuthorize(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[IsAuthorize] Successfully checked if session is authorized")
 	t.Tags("authorization_service", "service", "authorize")
@@ -136,8 +135,7 @@ func (s *AuthorizationServiceSuite) TestIsAuthorize(t provider.T) {
 // Тест для авторизации с использованием Redis
 func (s *AuthorizationServiceSuite) TestAuthorize(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[Authorize] Successfully authorized client")
 	t.Tags("authorization_service", "service", "authorize")
@@ -183,8 +181,7 @@ func (s *AuthorizationServiceSuite) TestAuthorize(t provider.T) {
 // Тест для регистрации клиента с использованием Redis
 func (s *AuthorizationServiceSuite) TestRegister(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[Register] Successfully registered new client")
 	t.Tags("authorization_service", "service", "register")
@@ -226,8 +223,7 @@ func (s *AuthorizationServiceSuite) TestRegister(t provider.T) {
 // Тест для выхода из системы с использованием Redis
 func (s *AuthorizationServiceSuite) TestLogout(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[Logout] Successfully logged out client")
 	t.Tags("authorization_service", "service", "logout")

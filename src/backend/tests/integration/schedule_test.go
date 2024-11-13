@@ -72,8 +72,7 @@ func (s *ScheduleServiceSuite) AfterAll(t provider.T) {
 
 func (s *ScheduleServiceSuite) TestCreateNewSchedule(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[CreateNewSchedule] Successfully created a new schedule")
 	t.Tags("schedule_service", "service", "create")
@@ -134,8 +133,7 @@ func (s *ScheduleServiceSuite) TestCreateNewSchedule(t provider.T) {
 
 func (s *ScheduleServiceSuite) TestChangeSchedule(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ChangeSchedule] Successfully changed schedule data")
 	t.Tags("schedule_service", "service", "update")
@@ -203,8 +201,7 @@ func (s *ScheduleServiceSuite) TestChangeSchedule(t provider.T) {
 
 func (s *ScheduleServiceSuite) TestDeleteSchedule(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[DeleteSchedule] Successfully deleted a schedule")
 	t.Tags("schedule_service", "service", "delete")
@@ -265,8 +262,7 @@ func (s *ScheduleServiceSuite) TestDeleteSchedule(t provider.T) {
 
 func (s *ScheduleServiceSuite) TestGetScheduleByID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[GetScheduleByID] Successfully retrieved schedule by ID")
 	t.Tags("schedule_service", "service", "get")

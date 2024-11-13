@@ -65,13 +65,14 @@ jobs:
           echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/tests/integration/deployment/.env
       
       - name: Add skipping flag to integration tests
+        id: add_skip
         # env:
         #   SKIP: ${{ needs.unit_tests.outputs.skip }} 
         if: ${{ needs.unit_tests.outputs.skip == 'true' }}
         run: |
           # echo "$SKIP" >> src/backend/tests/integration/deployment/.env
           echo "SKIP=${{ needs.unit_tests.outputs.skip }}" >> src/backend/tests/integration/deployment/.env
-          echo "SKIP=true" >> $GITHUB_OUTPUT
+          # echo "SKIP=true" >> $GITHUB_OUTPUT
           # cat src/backend/tests/integration/deployment/.env
 
       - name: Install Docker Compose
@@ -85,7 +86,7 @@ jobs:
       
       - name: Set Skip
         id: set_skip
-        if: failure()
+        if: failure() || ${{ needs.unit_tests.outputs.skip == 'true' }}
         run: |
           echo "SKIP=true" >> $GITHUB_OUTPUT
           

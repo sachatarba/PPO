@@ -71,8 +71,7 @@ func (s *GymServiceSuite) AfterAll(t provider.T) {
 
 func (s *GymServiceSuite) TestRegisterNewGym(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[RegisterNewGym] Successfully registered a new gym")
 	t.Tags("gym_service", "service", "register")
@@ -106,8 +105,7 @@ func (s *GymServiceSuite) TestRegisterNewGym(t provider.T) {
 
 func (s *GymServiceSuite) TestChangeGym(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ChangeGym] Successfully changed gym data")
 	t.Tags("gym_service", "service", "update")
@@ -143,8 +141,7 @@ func (s *GymServiceSuite) TestChangeGym(t provider.T) {
 
 func (s *GymServiceSuite) TestDeleteGym(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[DeleteGym] Successfully deleted a gym")
 	t.Tags("gym_service", "service", "delete")
@@ -171,8 +168,7 @@ func (s *GymServiceSuite) TestDeleteGym(t provider.T) {
 
 func (s *GymServiceSuite) TestGetGymByID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[GetGymByID] Successfully retrieved gym by ID")
 	t.Tags("gym_service", "service", "get")
@@ -200,8 +196,7 @@ func (s *GymServiceSuite) TestGetGymByID(t provider.T) {
 
 func (s *GymServiceSuite) TestListGyms(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
-		t.Fail()
+		t.Skip()
 	}
 	t.Title("[ListGyms] Successfully listed all gyms")
 	t.Tags("gym_service", "service", "list")
