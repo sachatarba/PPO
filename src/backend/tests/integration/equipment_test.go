@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/ozontech/allure-go/pkg/framework/provider"
@@ -66,6 +67,9 @@ func (s *EquipmentServiceSuite) AfterAll(t provider.T) {
 }
 
 func (s *EquipmentServiceSuite) TestCreateNewEquipment(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[CreateNewEquipment] Successfully created equipment")
 	t.Tags("equipment", "service", "create")
 	t.Parallel()
@@ -103,6 +107,9 @@ func (s *EquipmentServiceSuite) TestCreateNewEquipment(t provider.T) {
 }
 
 func (s *EquipmentServiceSuite) TestChangeEquipment(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ChangeEquipment] Successfully changed equipment")
 	t.Tags("equipment", "service", "update")
 	t.Parallel()
@@ -147,6 +154,9 @@ func (s *EquipmentServiceSuite) TestChangeEquipment(t provider.T) {
 }
 
 func (s *EquipmentServiceSuite) TestDeleteEquipment(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[DeleteEquipment] Successfully deleted equipment")
 	t.Tags("equipment", "service", "delete")
 	t.Parallel()
@@ -179,6 +189,9 @@ func (s *EquipmentServiceSuite) TestDeleteEquipment(t provider.T) {
 }
 
 func (s *EquipmentServiceSuite) TestGetEquipmentByID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[GetEquipmentByID] Successfully retrieved equipment by ID")
 	t.Tags("equipment", "service", "get")
 	t.Parallel()
@@ -210,6 +223,9 @@ func (s *EquipmentServiceSuite) TestGetEquipmentByID(t provider.T) {
 }
 
 func (s *EquipmentServiceSuite) TestListEquipmentsByGymID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListEquipmentsByGymID] Successfully listed equipments by gym ID")
 	t.Tags("equipment", "service", "list")
 	t.Parallel()

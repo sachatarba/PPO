@@ -20,6 +20,7 @@ type AuthServiceSuite struct {
 }
 
 func (s *AuthServiceSuite) TestAuthServiceRegister(t provider.T) {
+	t.Assert().NotNil(nil)
 	t.Title("[Register] Successfuly registered")
 	t.Tags("auth", "service", "register")
 	t.Parallel()

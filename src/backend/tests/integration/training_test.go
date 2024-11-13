@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/google/uuid"
@@ -69,6 +70,9 @@ func (s *TrainingServiceSuite) AfterAll(t provider.T) {
 
 // Тест создания новой тренировки
 func (s *TrainingServiceSuite) TestCreateNewTraining(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[CreateNewTraining] Successfully created a new training")
 	t.Tags("training_service", "service", "create")
 	t.Parallel()
@@ -108,6 +112,9 @@ func (s *TrainingServiceSuite) TestCreateNewTraining(t provider.T) {
 
 // Тест изменения тренировки
 func (s *TrainingServiceSuite) TestChangeTraining(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ChangeTraining] Successfully changed training data")
 	t.Tags("training_service", "service", "update")
 	t.Parallel()
@@ -152,6 +159,9 @@ func (s *TrainingServiceSuite) TestChangeTraining(t provider.T) {
 
 // Тест удаления тренировки
 func (s *TrainingServiceSuite) TestDeleteTraining(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[DeleteTraining] Successfully deleted a training")
 	t.Tags("training_service", "service", "delete")
 	t.Parallel()
@@ -189,6 +199,9 @@ func (s *TrainingServiceSuite) TestDeleteTraining(t provider.T) {
 
 // Тест получения списка тренировок по ID тренера
 func (s *TrainingServiceSuite) TestListTrainingsByTrainerID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListTrainingsByTrainerID] Successfully listed trainings by trainer ID")
 	t.Tags("training_service", "service", "list")
 	t.Parallel()

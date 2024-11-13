@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/google/uuid"
@@ -70,6 +71,9 @@ func (s *ScheduleServiceSuite) AfterAll(t provider.T) {
 }
 
 func (s *ScheduleServiceSuite) TestCreateNewSchedule(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[CreateNewSchedule] Successfully created a new schedule")
 	t.Tags("schedule_service", "service", "create")
 	t.Parallel()

@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"slices"
 	"testing"
 
@@ -70,6 +71,9 @@ func (s *ClientServiceSuite) AfterAll(t provider.T) {
 }
 
 func (s *ClientServiceSuite) TestRegisterNewClient(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[RegisterNewClient] Successfully registered a new client")
 	t.Tags("client_service", "service", "register")
 	t.Parallel()
@@ -101,6 +105,9 @@ func (s *ClientServiceSuite) TestRegisterNewClient(t provider.T) {
 }
 
 func (s *ClientServiceSuite) TestChangeClient(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ChangeClient] Successfully changed client data")
 	t.Tags("client_service", "service", "update")
 	t.Parallel()
@@ -134,6 +141,9 @@ func (s *ClientServiceSuite) TestChangeClient(t provider.T) {
 }
 
 func (s *ClientServiceSuite) TestDeleteClient(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[DeleteClient] Successfully deleted a client")
 	t.Tags("client_service", "service", "delete")
 	t.Parallel()
@@ -158,6 +168,9 @@ func (s *ClientServiceSuite) TestDeleteClient(t provider.T) {
 }
 
 func (s *ClientServiceSuite) TestGetClientByID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[GetClientByID] Successfully retrieved client by ID")
 	t.Tags("client_service", "service", "get")
 	t.Parallel()
@@ -183,6 +196,9 @@ func (s *ClientServiceSuite) TestGetClientByID(t provider.T) {
 }
 
 func (s *ClientServiceSuite) TestGetClientByLogin(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[GetClientByLogin] Successfully retrieved client by login")
 	t.Tags("client_service", "service", "get")
 	t.Parallel()
@@ -208,6 +224,9 @@ func (s *ClientServiceSuite) TestGetClientByLogin(t provider.T) {
 }
 
 func (s *ClientServiceSuite) TestListClients(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListClients] Successfully listed all clients")
 	t.Tags("client_service", "service", "list")
 	t.Parallel()

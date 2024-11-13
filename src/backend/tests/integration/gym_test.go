@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"slices"
 	"testing"
 
@@ -69,6 +70,9 @@ func (s *GymServiceSuite) AfterAll(t provider.T) {
 }
 
 func (s *GymServiceSuite) TestRegisterNewGym(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[RegisterNewGym] Successfully registered a new gym")
 	t.Tags("gym_service", "service", "register")
 	t.Parallel()
@@ -100,6 +104,9 @@ func (s *GymServiceSuite) TestRegisterNewGym(t provider.T) {
 }
 
 func (s *GymServiceSuite) TestChangeGym(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ChangeGym] Successfully changed gym data")
 	t.Tags("gym_service", "service", "update")
 	t.Parallel()
@@ -133,6 +140,9 @@ func (s *GymServiceSuite) TestChangeGym(t provider.T) {
 }
 
 func (s *GymServiceSuite) TestDeleteGym(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[DeleteGym] Successfully deleted a gym")
 	t.Tags("gym_service", "service", "delete")
 	t.Parallel()
@@ -157,6 +167,9 @@ func (s *GymServiceSuite) TestDeleteGym(t provider.T) {
 }
 
 func (s *GymServiceSuite) TestGetGymByID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[GetGymByID] Successfully retrieved gym by ID")
 	t.Tags("gym_service", "service", "get")
 	t.Parallel()
@@ -182,6 +195,9 @@ func (s *GymServiceSuite) TestGetGymByID(t provider.T) {
 }
 
 func (s *GymServiceSuite) TestListGyms(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListGyms] Successfully listed all gyms")
 	t.Tags("gym_service", "service", "list")
 	t.Parallel()

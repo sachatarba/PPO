@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"slices"
 	"testing"
 
@@ -73,6 +74,9 @@ func (s *TrainerServiceSuite) AfterAll(t provider.T) {
 }
 
 func (s *TrainerServiceSuite) TestRegisterNewTrainer(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[RegisterNewTrainer] Successfully registered a new trainer")
 	t.Tags("trainer_service", "service", "create")
 	t.Parallel()
@@ -101,6 +105,9 @@ func (s *TrainerServiceSuite) TestRegisterNewTrainer(t provider.T) {
 
 // Тест изменения данных тренера
 func (s *TrainerServiceSuite) TestChangeTrainer(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ChangeTrainer] Successfully changed trainer data")
 	t.Tags("trainer_service", "service", "update")
 	t.Parallel()
@@ -133,6 +140,9 @@ func (s *TrainerServiceSuite) TestChangeTrainer(t provider.T) {
 
 // Тест удаления тренера
 func (s *TrainerServiceSuite) TestDeleteTrainer(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[DeleteTrainer] Successfully deleted a trainer")
 	t.Tags("trainer_service", "service", "delete")
 	t.Parallel()
@@ -159,6 +169,9 @@ func (s *TrainerServiceSuite) TestDeleteTrainer(t provider.T) {
 
 // Тест получения тренера по ID
 func (s *TrainerServiceSuite) TestGetTrainerByID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[GetTrainerByID] Successfully retrieved trainer by ID")
 	t.Tags("trainer_service", "service", "get")
 	t.Parallel()
@@ -183,6 +196,9 @@ func (s *TrainerServiceSuite) TestGetTrainerByID(t provider.T) {
 
 // Тест списка тренеров
 func (s *TrainerServiceSuite) TestListTrainers(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListTrainers] Successfully listed all trainers")
 	t.Tags("trainer_service", "service", "list")
 	t.Parallel()
@@ -230,6 +246,9 @@ func (s *TrainerServiceSuite) TestListTrainers(t provider.T) {
 
 // Тест списка тренеров по ID зала
 func (s *TrainerServiceSuite) TestListTrainersByGymID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListTrainersByGymID] Successfully listed trainers by gym ID")
 	t.Tags("trainer_service", "service", "list", "gym")
 	t.Parallel()

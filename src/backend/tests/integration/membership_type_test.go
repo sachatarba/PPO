@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"errors"
+	"os"
 	"strconv"
 	"testing"
 
@@ -76,6 +77,9 @@ func (s *MembershipTypeServiceSuite) AfterAll(t provider.T) {
 }
 
 func (s *MembershipTypeServiceSuite) TestRegisterNewMembershipType(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[RegisterNewMembershipType] Successfully registered new membership type")
 	t.Tags("membership_type", "service", "create")
 	t.Parallel()
@@ -113,6 +117,9 @@ func (s *MembershipTypeServiceSuite) TestRegisterNewMembershipType(t provider.T)
 }
 
 func (s *MembershipTypeServiceSuite) TestChangeMembershipType(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ChangeMembershipType] Successfully changed membership type")
 	t.Tags("membership_type", "service", "update")
 	t.Parallel()
@@ -155,6 +162,9 @@ func (s *MembershipTypeServiceSuite) TestChangeMembershipType(t provider.T) {
 }
 
 func (s *MembershipTypeServiceSuite) TestDeleteMembershipType(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[DeleteMembershipType] Successfully deleted membership type")
 	t.Tags("membership_type", "service", "delete")
 	t.Parallel()
@@ -188,6 +198,9 @@ func (s *MembershipTypeServiceSuite) TestDeleteMembershipType(t provider.T) {
 }
 
 func (s *MembershipTypeServiceSuite) TestGetMembershipTypeByID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[GetMembershipTypeByID] Successfully retrieved membership type by ID")
 	t.Tags("membership_type", "service", "get")
 	t.Parallel()
@@ -220,6 +233,9 @@ func (s *MembershipTypeServiceSuite) TestGetMembershipTypeByID(t provider.T) {
 }
 
 func (s *MembershipTypeServiceSuite) TestListMembershipTypesByGymID(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.XSkip()
+	}
 	t.Title("[ListMembershipTypesByGymID] Successfully listed membership types by gym ID")
 	t.Tags("membership_type", "service", "list")
 	t.Parallel()
