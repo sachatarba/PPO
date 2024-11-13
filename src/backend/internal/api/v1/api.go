@@ -2,6 +2,7 @@ package v1
 
 import (
 	"log"
+	"time"
 
 	"github.com/sachatarba/course-db/internal/config"
 	handler "github.com/sachatarba/course-db/internal/delivery/v1/rest"
@@ -9,6 +10,11 @@ import (
 	postrgres_adapter "github.com/sachatarba/course-db/internal/postrgres"
 	redis_adapter "github.com/sachatarba/course-db/internal/redis"
 	"github.com/sachatarba/course-db/internal/server/v1"
+)
+
+const (
+	retries = 3
+	sleep = 5
 )
 
 type ApiServer struct {
@@ -25,7 +31,12 @@ func (api *ApiServer) Run() {
 		Conf: conf.RedisConf,
 	}
 
+
 	db, err := postgresConnector.Connect()
+	for i := 0; i < retries && err != nil; i++ {
+		time.Sleep(sleep)
+		db, err = postgresConnector.Connect()
+	}
 	if err != nil {
 		log.Fatal("Cant connect postgres", err)
 		return

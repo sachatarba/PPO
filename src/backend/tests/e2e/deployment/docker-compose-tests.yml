@@ -40,11 +40,11 @@ services:
     command: ["redis-server", "--databases", "${REDIS_DATABASES}", "--requirepass", "${REDIS_PASSWORD}"]
     networks:
       - net
-  check-postgres-started: 
-    image: jwilder/dockerize:0.6.1
-    depends_on:
-      - postgres-test
-    command: 'dockerize -wait=tcp://postgres:${POSTGRES_PORT}'
+  # check-postgres-started: 
+  #   image: jwilder/dockerize:0.6.1
+  #   depends_on:
+  #     - postgres-test
+  #   command: 'dockerize -wait=tcp://postgres:${POSTGRES_PORT}'
   golang-api-v1:
     build:
       context: ../../../
