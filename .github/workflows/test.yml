@@ -67,7 +67,7 @@ jobs:
         if: ${{ needs.unit_tests.outputs.skip == 'true' }}
         run: |
           # echo "$SKIP" >> src/backend/tests/integration/deployment/.env
-          echo "${{ needs.unit_tests.outputs.skip }}" >> src/backend/tests/integration/deployment/.env
+          echo "SKIP=${{ needs.unit_tests.outputs.skip }}" >> src/backend/tests/integration/deployment/.env
           echo "SKIP=true" >> $GITHUB_OUTPUT
 
       - name: Set up Docker
@@ -112,7 +112,7 @@ jobs:
         if: ${{ needs.integration_tests.outputs.skip == 'true' }}
         run: |
           # echo "$SKIP" >> src/backend/tests/integration/deployment/.env
-          echo "${{ needs.integration_tests.outputs.skip }}" >> src/backend/tests/integration/deployment/.env
+          echo "SKIP=${{ needs.integration_tests.outputs.skip }}" >> src/backend/tests/integration/deployment/.env
 
 
       - name: Set up Docker
