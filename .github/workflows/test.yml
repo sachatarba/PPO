@@ -114,8 +114,8 @@ jobs:
         #   SKIP: ${{ needs.unit_tests.outputs.skip }} 
         if: ${{ needs.integration_tests.outputs.skip == 'true' }}
         run: |
-          # echo "$SKIP" >> src/backend/tests/integration/deployment/.env
-          echo "SKIP=${{ needs.integration_tests.outputs.skip }}" >> src/backend/tests/integration/deployment/.env
+          # echo "$SKIP" >> src/backend/tests/e2e/deployment/.env
+          echo "SKIP=${{ needs.integration_tests.outputs.skip }}" >> src/backend/tests/e2e/deployment/.env
 
 
       - name: Set up Docker
@@ -165,3 +165,27 @@ jobs:
         with:
           name: allure-results-combined
           path: combined-results
+
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: combined-results
+
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history

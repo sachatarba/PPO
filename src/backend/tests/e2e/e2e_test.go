@@ -2,7 +2,6 @@ package e2e
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"testing"
@@ -66,10 +65,8 @@ type ClientMembershipsResponse struct {
 
 func (s *E2ESuite) TestClientMembershipHandlerPostClientMembership(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		log.Fatal("bebra")
 		t.Skip()
 	}
-	log.Println(os.Environ())
 	t.Title("[PostClientMembership] Successfully creates new client membership")
 	t.Tags("client_membership", "handler", "post")
 	t.Parallel()
