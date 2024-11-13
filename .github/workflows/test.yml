@@ -10,6 +10,8 @@ on:
 
 jobs:
   unit_tests:
+    outputs:
+      skip: ${{ steps.set_skip.outputs.skip }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,6 +35,7 @@ jobs:
           docker-compose -f src/backend/tests/unit/docker-compose-tests.yml up --abort-on-container-exit --build
 
       - name: Set Skip
+        id: set_skip
         if: failure()
         run: |
           echo "SKIP=true" >> $GITHUB_OUTPUT
