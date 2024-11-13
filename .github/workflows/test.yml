@@ -56,9 +56,11 @@ jobs:
           echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/tests/integration/deployment/.env
       
       - name: Add skipping flag to integration tests
-        if: $needs.unit_tests.outputs.skip == "true"
+        env:
+          SKIP: ${{ needs.unit_tests.outputs.skip }} 
+        if: SKIP == "true"
         run: |
-          echo "$needs.unit_tests.outputs.skip" >> src/backend/tests/integration/deployment/.env
+          echo "$SKIP" >> src/backend/tests/integration/deployment/.env
           # echo $env.SKIP >> src/backend/tests/integration/deployment/.env
 
       - name: Set up Docker
