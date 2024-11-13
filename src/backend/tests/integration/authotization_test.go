@@ -84,9 +84,9 @@ func (s *AuthorizationServiceSuite) AfterAll(t provider.T) {
 // Тест для проверки авторизации с использованием Redis
 func (s *AuthorizationServiceSuite) TestIsAuthorize(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
+		log.Fatal("environ:", os.Environ())
 		t.XSkip()
 	}
-	log.Fatal("environ:", os.Environ())
 	t.Title("[IsAuthorize] Successfully checked if session is authorized")
 	t.Tags("authorization_service", "service", "authorize")
 	t.Parallel()
