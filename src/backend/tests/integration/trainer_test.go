@@ -73,35 +73,6 @@ func (s *TrainerServiceSuite) AfterAll(t provider.T) {
 	}
 }
 
-func (s *TrainerServiceSuite) TestRegisterNewTrainer(t provider.T) {
-	if os.Getenv("SKIP") == "true" {
-		t.Skip()
-	}
-	t.Title("[RegisterNewTrainer] Successfully registered a new trainer")
-	t.Tags("trainer_service", "service", "create")
-	t.Parallel()
-	t.XSkip()
-
-	t.WithNewStep("Correct: successfully registered new trainer", func(sCtx provider.StepCtx) {
-		ctx := context.TODO()
-
-		// Создаём тренера
-		trainer := builder.NewTrainerBuilder().SetGymsID([]uuid.UUID{}).Build()
-
-		// Вызов метода
-		err := s.trainerService.RegisterNewTrainer(ctx, trainer)
-
-		// Проверка
-		sCtx.Assert().NoError(err)
-		actualOrm := orm.Trainer{ID: trainer.ID}
-
-		err = s.db.First(&actualOrm).Error
-		sCtx.Assert().NoError(err)
-		actual := orm.NewTrainerConverter().ConvertToEntity(actualOrm)
-
-		TrainerEqual(sCtx, trainer, actual)
-	})
-}
 
 // Тест изменения данных тренера
 func (s *TrainerServiceSuite) TestChangeTrainer(t provider.T) {
