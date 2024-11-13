@@ -61,13 +61,14 @@ services:
       - API_KEY=${API_KEY}
       - SHOP_ID=${SHOP_ID}
     restart: on-failure
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
+    # deploy:
+    #   restart_policy:
+    #     condition: on-failure
+    #     delay: 5s
+    #     max_attempts: 3
     depends_on:
-      - postgres-test
+      postgres-test:
+        condition: service_healthy
       - redis-test
     networks:
       - net

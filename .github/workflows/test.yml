@@ -98,7 +98,7 @@ jobs:
 
       - name: Run e2e tests
         run: |
-          docker-compose -f src/backend/tests/e2e/deployment/docker-compose-tests.yml up --build
+          docker-compose -f src/backend/tests/e2e/deployment/docker-compose-tests.yml up --abort-on-container-exit --build
           
       - name: Save Allure results from integration tests
         uses: actions/upload-artifact@v3
