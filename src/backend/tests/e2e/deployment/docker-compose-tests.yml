@@ -72,7 +72,7 @@ services:
     #     delay: 5s
     #     max_attempts: 3
     depends_on:
-      - check-postgres-started
+      - postgres-test
       - redis-test
     networks:
       - net
