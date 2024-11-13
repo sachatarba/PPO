@@ -63,6 +63,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - GOLANG_HOST=${GOLANG_HOST}
       - GOLANG_PORT=${GOLANG_PORT}
+      - SKIP=${SKIP}
     depends_on:
       - postgres-test
       - redis-test

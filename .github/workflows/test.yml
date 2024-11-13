@@ -41,6 +41,7 @@ jobs:
           echo "SKIP=true" >> $GITHUB_OUTPUT
 
       - name: Save Allure results from unit tests
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: allure-results-unit
@@ -127,6 +128,7 @@ jobs:
           docker-compose -f src/backend/tests/e2e/deployment/docker-compose-tests.yml up --abort-on-container-exit --build
           
       - name: Save Allure results from e2e tests
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: allure-results-e2e
@@ -135,6 +137,7 @@ jobs:
   combine_allure_results:
     runs-on: ubuntu-latest
     needs: [unit_tests, integration_tests, e2e_tests]
+    if: always()
     steps:
       - name: Download Allure results from unit tests
         uses: actions/download-artifact@v3
