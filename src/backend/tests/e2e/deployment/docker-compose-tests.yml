@@ -43,7 +43,7 @@ services:
   check-postgres-started: 
     image: jwilder/dockerize:0.6.1
     depends_on:
-      - postgres
+      - postgres-test
     command: 'dockerize -wait=tcp://postgres:${POSTGRES_PORT}'
   golang-api-v1:
     build:
