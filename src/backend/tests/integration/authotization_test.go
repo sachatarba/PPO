@@ -86,6 +86,7 @@ func (s *AuthorizationServiceSuite) TestIsAuthorize(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
 	}
+	log.Fatal("environ:", os.Environ())
 	t.Title("[IsAuthorize] Successfully checked if session is authorized")
 	t.Tags("authorization_service", "service", "authorize")
 	t.Parallel()
