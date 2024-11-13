@@ -14,8 +14,10 @@ import (
 
 const (
 	retries = 3
-	sleep = 5
+	// sleep = 3000
 )
+
+var sleep = time.Second * 3  
 
 type ApiServer struct {
 	conf config.Config
