@@ -64,6 +64,9 @@ type ClientMembershipsResponse struct {
 }
 
 func (s *E2ESuite) TestClientMembershipHandlerPostClientMembership(t provider.T) {
+	if os.Getenv("SKIP") == "true" {
+		t.Skip()
+	}
 	t.Title("[PostClientMembership] Successfully creates new client membership")
 	t.Tags("client_membership", "handler", "post")
 	t.Parallel()

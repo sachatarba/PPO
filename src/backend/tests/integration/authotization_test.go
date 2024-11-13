@@ -84,8 +84,8 @@ func (s *AuthorizationServiceSuite) AfterAll(t provider.T) {
 // Тест для проверки авторизации с использованием Redis
 func (s *AuthorizationServiceSuite) TestIsAuthorize(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		// log.Fatal("environ:", os.Environ())
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[IsAuthorize] Successfully checked if session is authorized")
 	t.Tags("authorization_service", "service", "authorize")
@@ -137,6 +137,7 @@ func (s *AuthorizationServiceSuite) TestIsAuthorize(t provider.T) {
 func (s *AuthorizationServiceSuite) TestAuthorize(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[Authorize] Successfully authorized client")
 	t.Tags("authorization_service", "service", "authorize")
@@ -183,6 +184,7 @@ func (s *AuthorizationServiceSuite) TestAuthorize(t provider.T) {
 func (s *AuthorizationServiceSuite) TestRegister(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[Register] Successfully registered new client")
 	t.Tags("authorization_service", "service", "register")
@@ -225,6 +227,7 @@ func (s *AuthorizationServiceSuite) TestRegister(t provider.T) {
 func (s *AuthorizationServiceSuite) TestLogout(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[Logout] Successfully logged out client")
 	t.Tags("authorization_service", "service", "logout")
@@ -276,7 +279,7 @@ func (s *AuthorizationServiceSuite) TestLogout(t provider.T) {
 // Тест для удаления клиента с использованием Redis
 func (s *AuthorizationServiceSuite) TestDeleteClient(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
-		t.XSkip()
+		t.Skip()
 	}
 	log.Println(os.Getenv("SKIP"))
 	t.Title("[DeleteClient] Successfully deleted client")

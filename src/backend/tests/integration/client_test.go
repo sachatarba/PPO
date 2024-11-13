@@ -73,6 +73,7 @@ func (s *ClientServiceSuite) AfterAll(t provider.T) {
 func (s *ClientServiceSuite) TestRegisterNewClient(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[RegisterNewClient] Successfully registered a new client")
 	t.Tags("client_service", "service", "register")
@@ -107,6 +108,7 @@ func (s *ClientServiceSuite) TestRegisterNewClient(t provider.T) {
 func (s *ClientServiceSuite) TestChangeClient(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[ChangeClient] Successfully changed client data")
 	t.Tags("client_service", "service", "update")
@@ -143,6 +145,7 @@ func (s *ClientServiceSuite) TestChangeClient(t provider.T) {
 func (s *ClientServiceSuite) TestDeleteClient(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[DeleteClient] Successfully deleted a client")
 	t.Tags("client_service", "service", "delete")
@@ -170,6 +173,7 @@ func (s *ClientServiceSuite) TestDeleteClient(t provider.T) {
 func (s *ClientServiceSuite) TestGetClientByID(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[GetClientByID] Successfully retrieved client by ID")
 	t.Tags("client_service", "service", "get")
@@ -198,6 +202,7 @@ func (s *ClientServiceSuite) TestGetClientByID(t provider.T) {
 func (s *ClientServiceSuite) TestGetClientByLogin(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[GetClientByLogin] Successfully retrieved client by login")
 	t.Tags("client_service", "service", "get")
@@ -226,6 +231,7 @@ func (s *ClientServiceSuite) TestGetClientByLogin(t provider.T) {
 func (s *ClientServiceSuite) TestListClients(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
+		t.Fail()
 	}
 	t.Title("[ListClients] Successfully listed all clients")
 	t.Tags("client_service", "service", "list")
