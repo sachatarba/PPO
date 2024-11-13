@@ -90,6 +90,7 @@ jobs:
           echo "SKIP=true" >> $GITHUB_OUTPUT
           
       - name: Save Allure results from integration tests
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: allure-results-integration
