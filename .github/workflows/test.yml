@@ -89,6 +89,7 @@ jobs:
         if: failure() || ${{ needs.unit_tests.outputs.skip == 'true' }}
         run: |
           echo "SKIP=true" >> $GITHUB_OUTPUT
+          echo ${{ needs.unit_tests.outputs.skip == 'true' }}
           
       - name: Save Allure results from integration tests
         if: always()
