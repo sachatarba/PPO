@@ -56,10 +56,10 @@ jobs:
           echo "${{ vars.UNIT_TEST_ENV }}" > src/backend/tests/integration/deployment/.env
       
       - name: Add skipping flag to integration tests
-        # if: $SKIP == 'true'
+        if: $needs.unit_tests.outputs.skip == "true"
         run: |
-          echo "${{ env.SKIP }}" >> src/backend/tests/integration/deployment/.env
-          echo $env.SKIP >> src/backend/tests/integration/deployment/.env
+          echo "$needs.unit_tests.outputs.skip" >> src/backend/tests/integration/deployment/.env
+          # echo $env.SKIP >> src/backend/tests/integration/deployment/.env
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
