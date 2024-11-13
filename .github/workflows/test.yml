@@ -35,7 +35,7 @@ jobs:
       - name: Set Skip
         if: failure()
         run: |
-          echo "SKIP=true" >> $GITHUB_ENV
+          echo "SKIP=true" >> $GITHUB_OUTPUT
 
       - name: Save Allure results from unit tests
         uses: actions/upload-artifact@v3
