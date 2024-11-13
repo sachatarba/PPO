@@ -3,6 +3,7 @@ package integration
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"os"
 	"testing"
 	"time"
@@ -276,6 +277,7 @@ func (s *AuthorizationServiceSuite) TestDeleteClient(t provider.T) {
 	if os.Getenv("SKIP") == "true" {
 		t.XSkip()
 	}
+	log.Println(os.Getenv("SKIP"))
 	t.Title("[DeleteClient] Successfully deleted client")
 	t.Tags("authorization_service", "service", "delete")
 	t.Parallel()
@@ -321,7 +323,6 @@ func (s *AuthorizationServiceSuite) TestDeleteClient(t provider.T) {
 		s.client.Del(ctx, "client_session:"+session.ClientID.String())
 	})
 }
-
 
 func TestAuthorizationServiceSuiteRunner(t *testing.T) {
 	suite.RunSuite(t, new(AuthorizationServiceSuite))
