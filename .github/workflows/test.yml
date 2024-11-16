@@ -171,9 +171,10 @@ jobs:
 
       - name: Install Allure CLI
         run: |
-          curl -o allure.zip -sSL https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
-          unzip allure.zip -d /usr/local/bin/
-          export PATH=$PATH:/usr/local/bin/allure-2.32.0/bin
+          curl -o allure.tar.gz -sSL https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
+          mkdir -p /usr/local/bin/allure
+          tar -xzf allure.tar.gz -C /usr/local/bin/allure --strip-components=1
+          export PATH=$PATH:/usr/local/bin/allure/bin
 
       - name: Generate Allure Report
         run: |
