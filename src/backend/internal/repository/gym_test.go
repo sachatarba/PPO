@@ -26,6 +26,8 @@ type GymRepoSuite struct {
 
 	ctx  context.Context
 	repo service.IGymRepository
+
+	service service.IGymService
 }
 
 func (s *GymRepoSuite) BeforeEach(t provider.T) {
@@ -34,6 +36,8 @@ func (s *GymRepoSuite) BeforeEach(t provider.T) {
 
 	s.gymRepo = NewGymRepo(db)
 	s.mock = mock
+
+	s.service = service.NewGymService(s.gymRepo)
 
 	t.Tags("fixture", "gym", "db")
 }
@@ -196,6 +200,88 @@ func (s *GymRepoSuite) TestListGyms(t provider.T) {
 		sCtx.Assert().Len(results, 2)
 		sCtx.Assert().Equal(gym1.ID, results[0].ID)
 		sCtx.Assert().Equal(gym2.ID, results[1].ID)
+
+		err = s.mock.ExpectationsWereMet()
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *GymRepoSuite) TestChangeGym1(t provider.T) {
+	t.Title("[Change] Change gym details")
+	t.Tags("repository", "postgres")
+
+	t.WithNewStep("Update gym details", func(sCtx provider.StepCtx) {
+		gym := builder.NewGymBuilder().Build()
+
+		s.mock.ExpectBegin()
+		s.mock.ExpectExec(`UPDATE "gyms" SET "name"=\$1,"phone"=\$2,"city"=\$3,"addres"=\$4,"is_chain"=\$5 WHERE "id" = \$6`).
+			WithArgs(
+				gym.Name,
+				gym.Phone,
+				gym.City,
+				gym.Addres,
+				fmt.Sprintf("%t", gym.IsChain),
+				gym.ID,
+			).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		s.mock.ExpectCommit()
+
+		ctx := context.TODO()
+		sCtx.WithNewParameters("ctx", ctx, "gym", gym)
+
+		err := s.service.ChangeGym(ctx, gym)
+
+		sCtx.Assert().NoError(err)
+		err = s.mock.ExpectationsWereMet()
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *GymRepoSuite) TestDeleteGym1(t provider.T) {
+	t.Title("[Delete] Delete gym by ID MOOOOOOOOCK")
+	t.Tags("repository", "postgres")
+
+	t.WithNewStep("Delete gym by ID", func(sCtx provider.StepCtx) {
+		gymID := uuid.New()
+
+		s.mock.ExpectBegin()
+		s.mock.ExpectExec(`DELETE FROM "gyms" WHERE "gyms"."id" = \$1`).
+			WithArgs(gymID).
+			WillReturnResult(sqlmock.NewResult(1, 1))
+		s.mock.ExpectCommit()
+
+		ctx := context.TODO()
+		sCtx.WithNewParameters("ctx", ctx, "gymID", gymID)
+		err := s.service.DeleteGym(ctx, gymID)
+
+		sCtx.Assert().NoError(err)
+		err = s.mock.ExpectationsWereMet()
+		sCtx.Assert().NoError(err)
+	})
+}
+
+func (s *GymRepoSuite) TestGetGymByID1(t provider.T) {
+	t.Title("[Get] Get gym by ID")
+	t.Tags("repository", "postgres")
+
+	t.WithNewStep("Retrieve gym by ID", func(sCtx provider.StepCtx) {
+		gym := builder.NewGymBuilder().Build()
+
+		s.mock.ExpectQuery(`^SELECT \* FROM "gyms" WHERE "gyms"."id" = \$1 ORDER BY "gyms"."id" LIMIT \$2$`).
+			WithArgs(gym.ID, 1).
+			WillReturnRows(sqlmock.NewRows([]string{"id", "name", "addres", "phone"}).
+				AddRow(gym.ID, gym.Name, gym.Addres, gym.Phone))
+
+		ctx := context.TODO()
+		sCtx.WithNewParameters("ctx", ctx, "gymID", gym.ID)
+
+		result, err := s.service.GetGymByID(ctx, gym.ID)
+
+		sCtx.Assert().NoError(err)
+		sCtx.Assert().Equal(gym.ID, result.ID)
+		sCtx.Assert().Equal(gym.Name, result.Name)
+		sCtx.Assert().Equal(gym.Addres, result.Addres)
+		sCtx.Assert().Equal(gym.Phone, result.Phone)
 
 		err = s.mock.ExpectationsWereMet()
 		sCtx.Assert().NoError(err)

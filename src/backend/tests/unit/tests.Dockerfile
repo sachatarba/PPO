@@ -4,5 +4,5 @@ WORKDIR /app
 
 COPY . /app
 
-CMD ["go", "test", "./internal/..."]
+CMD ["go", "test", "-count=1", "./internal/..."]
 # CMD ["ls", "allure-results"]

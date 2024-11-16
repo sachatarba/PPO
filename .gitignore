@@ -29,3 +29,5 @@ ShopID.key
 exportenv.py
 time_measure.py
 main
+
+allure-results

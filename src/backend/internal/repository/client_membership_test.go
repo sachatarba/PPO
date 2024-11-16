@@ -36,7 +36,6 @@ func (c *ClientMembershipRepoSuite) BeforeAll(t provider.T) {
 func (c *ClientMembershipRepoSuite) TestCreateNewClientMembership(t provider.T) {
 	t.Title("[Create] Create client membership")
 	t.Tags("repository", "postgres")
-	// t.Parallel()
 
 	clientMembership := fabric.DeafaultClientMembership()
 
@@ -66,7 +65,6 @@ func (c *ClientMembershipRepoSuite) TestCreateNewClientMembership(t provider.T) 
 func (c *ClientMembershipRepoSuite) TestChangeClientMembership(t provider.T) {
 	t.Title("[Update] Change client membership")
 	t.Tags("repository", "postgres")
-	// t.Parallel()
 
 	t.WithNewStep("Change client membership", func(sCtx provider.StepCtx) {
 		clientMembership := builder.NewClientMembershipBuilder().
@@ -99,7 +97,6 @@ func (c *ClientMembershipRepoSuite) TestChangeClientMembership(t provider.T) {
 func (c *ClientMembershipRepoSuite) TestDeleteClientMembership(t provider.T) {
 	t.Title("[Delete] Delete client membership")
 	t.Tags("repository", "postgres")
-	// t.Parallel()
 
 	t.WithNewStep("Delete client membership", func(sCtx provider.StepCtx) {
 		clientMembershipID := uuid.New()
