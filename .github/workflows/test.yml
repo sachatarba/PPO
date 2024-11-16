@@ -175,10 +175,9 @@ jobs:
           mkdir -p /usr/local/bin/allure
           tar -xzf allure.tar.gz -C /usr/local/bin/allure --strip-components=1
           export PATH=$PATH:/usr/local/bin/allure/bin
-
-      - name: Generate Allure Report
-        run: |
           allure generate combined-results --clean -o allure-report
+      # - name: Generate Allure Report
+      #   run: |
 
       - name: Upload Allure Report
         uses: actions/upload-artifact@v3
