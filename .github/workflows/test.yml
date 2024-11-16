@@ -162,6 +162,17 @@ jobs:
         with:
           name: allure-results-e2e
           path: combined-results
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+
+      - name: Install Allure CLI
+        run: |
+          curl -o allure.zip -sSL https://github.com/allure-framework/allure2/releases/latest/download/allure-2.21.0.zip
+          unzip allure.zip -d /usr/local/bin/
+          export PATH=$PATH:/usr/local/bin/allure-2.21.0/bin
 
       - name: Generate Allure Report
         run: |
