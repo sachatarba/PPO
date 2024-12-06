@@ -2,11 +2,13 @@ package v2
 
 import (
 	"log"
+	"time"
 
 	"github.com/sachatarba/course-db/internal/config"
 	"github.com/sachatarba/course-db/internal/orm"
 	postrgres_adapter "github.com/sachatarba/course-db/internal/postrgres"
 	"github.com/sachatarba/course-db/internal/server/v2"
+	"gorm.io/gorm"
 )
 
 type ApiServer struct {
@@ -22,8 +24,16 @@ func (api *ApiServer) Run() {
 	// redisConnector := redis_adapter.RedisConnector{
 	// 	Conf: conf.RedisConf,
 	// }
-
-	db, err := postgresConnector.Connect()
+	var db *gorm.DB
+	var err error
+	for i := 0; i < 5; i++ {
+		db, err = postgresConnector.Connect()
+		if err != nil {
+			log.Print("Cant connect postgres", err)
+			time.Sleep(time.Second)
+			// return
+		}
+	}
 	if err != nil {
 		log.Print("Cant connect postgres", err)
 		return

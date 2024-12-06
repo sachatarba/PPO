@@ -3,6 +3,7 @@ package rest
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -15,7 +16,7 @@ type AuthHandler struct {
 	authorizationService service.IAuthorizationService
 }
 
-func NewAuthHandler(authorizationService service.IAuthorizationService) *AuthHandler{
+func NewAuthHandler(authorizationService service.IAuthorizationService) *AuthHandler {
 	return &AuthHandler{
 		authorizationService: authorizationService,
 	}
@@ -83,12 +84,84 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	session, err := h.authorizationService.Authorize(ctx.Request.Context(), req.Login, req.Password)
+	// session, err := h.authorizationService.Authorize(ctx.Request.Context(), req.Login, req.Password)
+	_, err = h.authorizationService.Authorize(ctx.Request.Context(), req.Login, req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 
 		return
 	}
+
+	// cookie := &http.Cookie{
+	// 	Name:     "session",
+	// 	Value:    session.SessionID.String(),
+	// 	Path:     "/",
+	// 	Domain:   "localhost",
+	// 	Expires:  session.TTL,
+	// 	HttpOnly: true,
+	// 	Secure:   false,
+	// 	SameSite: http.SameSiteLaxMode,
+	// }
+
+	// http.SetCookie(ctx.Writer, cookie)
+	ctx.Status(http.StatusOK)
+	// ctx.JSON(http.StatusOK, gin.H{"session": session})
+}
+
+func (h *AuthHandler) ChangePassword(ctx *gin.Context) {
+	log.Print("ChangePassword request:", ctx.Request)
+
+	var req request.ChangePasswordReq
+
+	err := ctx.BindJSON(&req)
+	if err != nil {
+		log.Print(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
+	}
+
+	err = h.authorizationService.ChangePassword(ctx.Request.Context(), req.Login, req.NewPassword, req.Code)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
+	}
+
+	ctx.Status(http.StatusOK)
+}
+
+func (h *AuthHandler) Confirm2FA(ctx *gin.Context) {
+	log.Println("Confirm2FA req:", ctx.Request)
+	
+	var confirmReq request.ConfirmReq
+	err := ctx.BindJSON(&confirmReq)
+	if err != nil {
+		log.Print(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+
+		return
+	}
+
+	session, err := h.authorizationService.Confirm2FA(ctx, confirmReq.ClientID, confirmReq.Code)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+		return
+	}
+
+	// if !confirmed {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"err": "Invalid code"})
+
+	// 	return
+	// }
+
+	// session, err := h.authorizationService.CreateSession(ctx, confirmReq.ClientID)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
+
+	// 	return
+	// }
 
 	cookie := &http.Cookie{
 		Name:     "session",
@@ -102,9 +175,9 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 	}
 
 	http.SetCookie(ctx.Writer, cookie)
-	ctx.Status(http.StatusOK)
 	ctx.JSON(http.StatusOK, gin.H{"session": session})
 }
+
 
 func (h *AuthHandler) RegisterNewUser(ctx *gin.Context) {
 	log.Print("RegisterNewUser request:", ctx.Request)
@@ -139,7 +212,7 @@ func (h *AuthHandler) RegisterNewUser(ctx *gin.Context) {
 	ctx.SetCookie(
 		"session",
 		session.SessionID.String(),
-		session.TTL.Second(),
+		int(session.TTL.Unix()-time.Now().Unix()),
 		"/",
 		"",
 		true,

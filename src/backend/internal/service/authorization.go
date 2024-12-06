@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -106,4 +107,16 @@ func (a *AuthorizationService) DeleteClient(ctx context.Context, clientID uuid.U
 	session := entity.Session{}
 
 	return session, nil
+}
+
+func (a *AuthorizationService) Confirm2FA(ctx context.Context, clientID uuid.UUID, code string) (entity.Session, error) {
+	return entity.Session{}, fmt.Errorf("not implemented")
+}
+
+func (a *AuthorizationService) CreateSession(ctx context.Context, clientID uuid.UUID) (entity.Session, error) {
+	return entity.Session{}, fmt.Errorf("not implemented") 
+}
+
+func (a *AuthorizationService) ChangePassword(ctx context.Context, login string, password string, newPassword string) error {
+	return fmt.Errorf("not implemented")
 }

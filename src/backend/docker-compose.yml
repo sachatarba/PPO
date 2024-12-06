@@ -127,6 +127,70 @@ services:
     restart: always  
     networks:
       - net
+
+  golang-auth-v2:
+    build:
+      context: .
+      dockerfile: auth.Dockerfile 
+    ports:
+      - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=${GOLANG_HOST}
+      - GOLANG_PORT=${GOLANG_API_V2_PORT}
+      - API_KEY=${API_KEY}
+      - SHOP_ID=${SHOP_ID}
+      - GRPC_CLIENT_SERVER_HOST=${GRPC_CLIENT_SERVER_HOST}
+      - GRPC_CLIENT_SERVER_PORT=${GRPC_CLIENT_SERVER_PORT}
+      - AUTH_SERVER_HOST=${AUTH_SERVER_HOST}
+      - AUTH_SERVER_PORT=${AUTH_SERVER_PORT}
+      - SMTP_ADDRESS=${SMTP_ADDRESS}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - net
+
+  golang-grpc-client-v2:
+    build:
+      context: .
+      dockerfile: client.Dockerfile 
+    ports:
+      - "${GRPC_CLIENT_SERVER_PORT}:${GRPC_CLIENT_SERVER_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=${GOLANG_HOST}
+      - GOLANG_PORT=${GOLANG_API_V2_PORT}
+      - API_KEY=${API_KEY}
+      - SHOP_ID=${SHOP_ID}
+      - GRPC_CLIENT_SERVER_HOST=${GRPC_CLIENT_SERVER_HOST}
+      - GRPC_CLIENT_SERVER_PORT=${GRPC_CLIENT_SERVER_PORT}
+      - AUTH_SERVER_HOST=${AUTH_SERVER_HOST}
+      - AUTH_SERVER_PORT=${AUTH_SERVER_PORT}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - net
     
 
 networks:

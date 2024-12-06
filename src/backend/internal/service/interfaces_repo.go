@@ -89,4 +89,9 @@ type (
 		GetSessionsByClientID(ctx context.Context, clientID uuid.UUID) ([]entity.Session, error)
 		GetSessionBySessionID(ctx context.Context, sessionID uuid.UUID) (entity.Session, error)
 	}
+
+	ICodeRepository interface {
+		SaveCode(ctx context.Context, code string, clienID uuid.UUID) error
+		GetCodeByClientID(ctx context.Context, clientID uuid.UUID) (string, error)
+	}
 )

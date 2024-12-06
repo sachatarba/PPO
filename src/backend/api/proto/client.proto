@@ -1,0 +1,45 @@
+// protoc --go_out=./ --go-grpc_out=./ api/proto/client.proto
+syntax = "proto3";
+
+package clientservice.v2;
+
+option go_package = "/internal/api/grpc";
+
+// import "google/protobuf/uuid.proto"; // Используйте готовую библиотеку для UUID
+
+service ClientService {
+  rpc RegisterNewClient(Client) returns (Empty);
+  rpc ChangeClient(Client) returns (Empty);
+  rpc DeleteClient(UUID) returns (Empty);
+//  rpc GetClientByID(UUID) returns (ClientResponse);
+  rpc GetClientByLogin(LoginRequest) returns (ClientResponse);
+//  rpc ListClients(Empty) returns (ClientListResponse);
+}
+
+message Client {
+  string id = 1;
+  string fullname = 2;
+  string login = 3;
+  string email = 4;
+  string phone = 5;
+  string birthdate = 6;
+  string password = 7;
+}
+
+message UUID {
+  string value = 1;
+}
+
+message LoginRequest {
+  string login = 1;
+}
+
+message ClientResponse {
+  Client client = 1;
+}
+
+message ClientListResponse {
+  repeated Client clients = 1;
+}
+
+message Empty {}

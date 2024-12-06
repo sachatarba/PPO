@@ -92,5 +92,12 @@ type (
 		Logout(ctx context.Context, sessionID uuid.UUID) (entity.Session, error)
 		DeleteClient(ctx context.Context, clientID uuid.UUID) (entity.Session, error)
 		IsAuthorize(ctx context.Context, sessionID uuid.UUID) (*entity.Session, error)
+		Confirm2FA(ctx context.Context, clientID uuid.UUID, code string) (entity.Session, error)
+		// CreateSession(ctx context.Context, clientID uuid.UUID) (entity.Session, error)
+		ChangePassword(ctx context.Context, login string, newPassword string, code string) error
+	}
+
+	ISmtpService interface {
+		SendMail(text string, receiver string) error
 	}
 )

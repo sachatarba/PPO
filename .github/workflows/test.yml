@@ -3,7 +3,8 @@ name: Test Pipeline
 on:
   push:
     branches:
-      - testing-and-web  
+      - testing-and-web
+      - authorization
   pull_request:
     branches:
       - testing-and-web  
@@ -130,7 +131,11 @@ jobs:
       - name: Run e2e tests
         run: |
           docker-compose -f src/backend/tests/e2e/deployment/docker-compose-tests.yml up --abort-on-container-exit --build
-          
+      
+      - name: Fix file permissions
+        run: |
+          sudo chmod -R 755 /home/runner/work/PPO/PPO/src/backend/allure-results
+    
       - name: Save Allure results from e2e tests
         if: always()
         uses: actions/upload-artifact@v3

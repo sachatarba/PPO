@@ -76,15 +76,42 @@ services:
       - redis-test
     networks:
       - net
+  golang-api-v2:
+    build:
+      context: ../../../
+      dockerfile: ./tests/e2e/deployment/apiV2.Dockerfile
+    ports:
+      - "${GOLANG_API_V2_PORT}:${GOLANG_API_V2_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=${GOLANG_HOST}
+      - GOLANG_PORT=${GOLANG_API_V2_PORT}
+      - API_KEY=${API_KEY}
+      - SHOP_ID=${SHOP_ID}
+    depends_on:
+      - postgres-test
+      - redis-test
+    networks:
+      - net
   golang-test:
     build:
       context: ../../../
       dockerfile: ./tests/e2e/deployment/tests.Dockerfile
     volumes:
       - ../../../allure-results:/app/tests/e2e/allure-results
-    ports:
-      - "${GOLANG_TEST_PORT}:${GOLANG_TEST_PORT}"
+    # ports:
+      # - "${GOLANG_TEST_PORT}:${GOLANG_TEST_PORT}"
     environment:
+      - AUTH_SERVER_HOST=${AUTH_SERVER_HOST}
+      - AUTH_SERVER_PORT=${AUTH_SERVER_PORT}
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -97,10 +124,76 @@ services:
       - GOLANG_HOST=${GOLANG_HOST}
       - GOLANG_PORT=${GOLANG_API_V1_PORT}
       - SKIP=${SKIP}
+      - PASSWORD=${PASSWORD}
     depends_on:
       - postgres-test
       - redis-test
       - golang-api-v1
+      - golang-api-v2
+    networks:
+      - net
+  golang-auth-v2-test:
+    build:
+      context: ../../../
+      dockerfile: ./tests/e2e/deployment/auth.Dockerfile 
+    ports:
+      - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=${GOLANG_HOST}
+      - GOLANG_PORT=${GOLANG_API_V2_PORT}
+      - API_KEY=${API_KEY}
+      - SHOP_ID=${SHOP_ID}
+      - GRPC_CLIENT_SERVER_HOST=${GRPC_CLIENT_SERVER_HOST}
+      - GRPC_CLIENT_SERVER_PORT=${GRPC_CLIENT_SERVER_PORT}
+      - AUTH_SERVER_HOST=${AUTH_SERVER_HOST}
+      - AUTH_SERVER_PORT=${AUTH_SERVER_PORT}
+      - SMTP_ADDRESS=${SMTP_ADDRESS}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    depends_on:
+      - postgres-test
+      - redis-test
+      - golang-grpc-client-v2-test
+    networks:
+      - net
+
+  golang-grpc-client-v2-test:
+    build:
+      context: ../../../
+      dockerfile: ./tests/e2e/deployment/client.Dockerfile
+    ports:
+      - "${GRPC_CLIENT_SERVER_PORT}:${GRPC_CLIENT_SERVER_PORT}"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SSLMODE=${POSTGRES_SSLMODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - GOLANG_HOST=${GOLANG_HOST}
+      - GOLANG_PORT=${GOLANG_API_V2_PORT}
+      - API_KEY=${API_KEY}
+      - SHOP_ID=${SHOP_ID}
+      - GRPC_CLIENT_SERVER_HOST=${GRPC_CLIENT_SERVER_HOST}
+      - GRPC_CLIENT_SERVER_PORT=${GRPC_CLIENT_SERVER_PORT}
+      - AUTH_SERVER_HOST=${AUTH_SERVER_HOST}
+      - AUTH_SERVER_PORT=${AUTH_SERVER_PORT}
+    depends_on:
+      - postgres-test
+      - redis-test
     networks:
       - net
 

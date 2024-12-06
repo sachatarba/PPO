@@ -4,10 +4,13 @@ import "os"
 
 type (
 	Config struct {
-		PostgresConf *PostgresConfig
-		RedisConf    *RedisConfig
-		ServerConfig *ServerConfig
-		PaymentConfig *PaymentApiConfig
+		PostgresConf            *PostgresConfig
+		RedisConf               *RedisConfig
+		ServerConfig            *ServerConfig
+		PaymentConfig           *PaymentApiConfig
+		GrpcClientsServerConfig *GrpcClientsServerConfig
+		AuthServerConfig        *AuthServerConfig
+		SmtpConfig              *SmtpConfig
 	}
 
 	PostgresConfig struct {
@@ -34,6 +37,23 @@ type (
 		ApiKey string
 		ShopID string
 	}
+
+	GrpcClientsServerConfig struct {
+		Host string
+		Port string
+	}
+
+	AuthServerConfig struct {
+		Host string
+		Port string
+	}
+
+	SmtpConfig struct {
+		FromAddres string
+		Password   string
+		SmtpHost   string
+		SmtpPort   string
+	}
 )
 
 func paymentApiConfFromEnv() *PaymentApiConfig {
@@ -47,6 +67,20 @@ func serverConfFromEnv() *ServerConfig {
 	return &ServerConfig{
 		Host: os.Getenv("GOLANG_HOST"),
 		Port: os.Getenv("GOLANG_PORT"),
+	}
+}
+
+func grpcClientServerConfFromEnv() *GrpcClientsServerConfig {
+	return &GrpcClientsServerConfig{
+		Host: os.Getenv("GRPC_CLIENT_SERVER_HOST"),
+		Port: os.Getenv("GRPC_CLIENT_SERVER_PORT"),
+	}
+}
+
+func authServerConfFromEnv() *AuthServerConfig {
+	return &AuthServerConfig{
+		Host: os.Getenv("AUTH_SERVER_HOST"),
+		Port: os.Getenv("AUTH_SERVER_PORT"),
 	}
 }
 
@@ -69,11 +103,23 @@ func postgresConfFromEnv() *PostgresConfig {
 	}
 }
 
+func smtpConfFromEnv() *SmtpConfig {
+	return &SmtpConfig{
+		FromAddres: os.Getenv("SMTP_ADDRESS"),
+		SmtpHost:   os.Getenv("SMTP_HOST"),
+		SmtpPort:   os.Getenv("SMTP_PORT"),
+		Password:   os.Getenv("SMTP_PASSWORD"),
+	}
+}
+
 func NewConfFromEnv() *Config {
 	return &Config{
-		PostgresConf: postgresConfFromEnv(),
-		RedisConf:    redisConfFromEnv(),
-		ServerConfig: serverConfFromEnv(),
-		PaymentConfig: paymentApiConfFromEnv(),
+		PostgresConf:            postgresConfFromEnv(),
+		RedisConf:               redisConfFromEnv(),
+		ServerConfig:            serverConfFromEnv(),
+		PaymentConfig:           paymentApiConfFromEnv(),
+		GrpcClientsServerConfig: grpcClientServerConfFromEnv(),
+		AuthServerConfig:        authServerConfFromEnv(),
+		SmtpConfig:              smtpConfFromEnv(),
 	}
 }
