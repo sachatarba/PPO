@@ -52,7 +52,7 @@ func (a *AuthorizationNewService) Authorize(ctx context.Context, login string, p
 		return entity.Session{}, err
 	}
 
-	err = a.sendAndSaveCode(ctx, client.ID, client.Email, "Код подтверждения авторизации")
+	err = a.sendAndSaveCode(ctx, client.ID, client.Email, "[Качалка] Код подтверждения авторизации на сайте")
 	// log.Println("Error: ", login, password, err)
 	if err != nil {
 		return entity.Session{}, err
@@ -209,7 +209,7 @@ func (a *AuthorizationNewService) sendAndSaveCode(ctx context.Context, id uuid.U
 	}
 
 	index := strings.IndexAny(email, "@")
-	message := fmt.Sprintf("Привет, %s!\r\n Ваш код для подтверждения авториазции: %s", email[:index], code)
+	message := fmt.Sprintf("Привет, %s!\r\nВ ваш аккаунт был выполнен вход.\r\nДля подтверждения авториазции введите код: %s\r\nЕсли это были не вы, проигнорируйте это письмо.", email[:index], code)
 	err = a.smtpService.SendMail(message, email, subject)
 	if err != nil {
 		return fmt.Errorf("can't send email: %w", err)
