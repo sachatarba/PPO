@@ -143,58 +143,58 @@ jobs:
           name: allure-results-e2e
           path: src/backend/allure-results/
 
-  combine_allure_results:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    needs: [unit_tests, integration_tests, e2e_tests]
-    if: always()
-    steps:
-      - name: Download Allure results from unit tests
-        uses: actions/download-artifact@v3
-        with:
-          name: allure-results-unit
-          path: combined-results
+  # combine_allure_results:
+  #   permissions:
+  #     contents: write
+  #   runs-on: ubuntu-latest
+  #   needs: [unit_tests, integration_tests, e2e_tests]
+  #   if: always()
+  #   steps:
+  #     - name: Download Allure results from unit tests
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: allure-results-unit
+  #         path: combined-results
 
-      - name: Download Allure results from integration tests
-        uses: actions/download-artifact@v3
-        with:
-          name: allure-results-integration
-          path: combined-results
+  #     - name: Download Allure results from integration tests
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: allure-results-integration
+  #         path: combined-results
 
-      - name: Download Allure results from e2e tests
-        uses: actions/download-artifact@v3
-        with:
-          name: allure-results-e2e
-          path: combined-results
+  #     - name: Download Allure results from e2e tests
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: allure-results-e2e
+  #         path: combined-results
       
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
+  #     - name: Setup Java
+  #       uses: actions/setup-java@v3
+  #       with:
+  #         java-version: '11'
+  #         distribution: 'temurin'
 
-      - name: Install Allure CLI
-        run: |
-          curl -o allure.tar.gz -sSL https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
-          mkdir -p /usr/local/bin/allure
-          tar -xzf allure.tar.gz -C /usr/local/bin/allure --strip-components=1
-          export PATH=$PATH:/usr/local/bin/allure/bin
-          allure generate combined-results --clean -o allure-report
-      # - name: Generate Allure Report
-      #   run: |
+  #     - name: Install Allure CLI
+  #       run: |
+  #         curl -o allure.tar.gz -sSL https://github.com/allure-framework/allure2/releases/download/2.32.0/allure-2.32.0.tgz
+  #         mkdir -p /usr/local/bin/allure
+  #         tar -xzf allure.tar.gz -C /usr/local/bin/allure --strip-components=1
+  #         export PATH=$PATH:/usr/local/bin/allure/bin
+  #         allure generate combined-results --clean -o allure-report
+  #     # - name: Generate Allure Report
+  #     #   run: |
 
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-report
-          path: allure-report
+  #     - name: Upload Allure Report
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: allure-report
+  #         path: allure-report
 
-      - name: Upload combined Allure results
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-results-combined
-          path: combined-results
+  #     - name: Upload combined Allure results
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: allure-results-combined
+  #         path: combined-results
 
       # - name: Load test report history
       #   uses: actions/checkout@v3
