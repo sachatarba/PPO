@@ -216,7 +216,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 func TestFeatures(t *testing.T) {
 	allure.RegisterFormatter()
 	options := godog.Options{
-		Format: "allure",
+		Format: "pretty",
 		Paths:  []string{"features"},
 	}
 
