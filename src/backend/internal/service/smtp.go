@@ -17,10 +17,10 @@ func NewSmtpService(config *config.SmtpConfig) *SmtpService {
 	}
 }
 
-func (s *SmtpService) SendMail(text string, receiver string) error {
+func (s *SmtpService) SendMail(text string, receiver string, subject string) error {
 	message := []byte("From: " + s.config.FromAddres + "\r\n" +
 		"To: " + receiver + "\r\n" +
-		"Subject: Код для авторизации\r\n" +
+		"Subject: " + subject + "\r\n" +
 		"\r\n" +
 		text + "\r\n")
 

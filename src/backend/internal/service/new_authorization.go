@@ -51,11 +51,11 @@ func (a *AuthorizationNewService) Authorize(ctx context.Context, login string, p
 		return entity.Session{}, err
 	}
 
-	err = a.sendAndSaveCode(ctx, client.ID, client.Email)
-	log.Println("Error: ", login, password, err)
-	// if err != nil {
-	// 	return entity.Session{}, err
-	// }
+	err = a.sendAndSaveCode(ctx, client.ID, client.Email, "Код подтверждения авторизации")
+	// log.Println("Error: ", login, password, err)
+	if err != nil {
+		return entity.Session{}, err
+	}
 
 	return entity.Session{}, nil
 }
@@ -197,7 +197,7 @@ func (a *AuthorizationNewService) checkAuth(ctx context.Context, login string, p
 	}, nil
 }
 
-func (a *AuthorizationNewService) sendAndSaveCode(ctx context.Context, id uuid.UUID, email string) error {
+func (a *AuthorizationNewService) sendAndSaveCode(ctx context.Context, id uuid.UUID, email string, subject string) error {
 	code, err := generate2FACode()
 	if err != nil {
 		return fmt.Errorf("can't generate 2fa code: %w", err)
@@ -206,10 +206,10 @@ func (a *AuthorizationNewService) sendAndSaveCode(ctx context.Context, id uuid.U
 	if err != nil {
 		return fmt.Errorf("can't save code %w", err)
 	}
-
-	err = a.smtpService.SendMail(code, email)
+	message := fmt.Sprintf("Привет, %s!\r\n Ваш код для подтверждения авториазции: %s", email, code)
+	err = a.smtpService.SendMail(message, email, subject)
 	if err != nil {
-		return  fmt.Errorf("can't send email: %w", err)
+		return fmt.Errorf("can't send email: %w", err)
 	}
 
 	return nil

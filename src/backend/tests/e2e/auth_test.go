@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
+	"regexp"
 	"testing"
 	"time"
 
@@ -40,6 +40,17 @@ func (a *authFeature) setup() {
 		BaseURL:  fmt.Sprintf("http://%s:8099/api/v2/", host),
 		Reporter: httpexpect.NewAssertReporter(nil),
 	})
+}
+
+func ExtractCode(input string) (string, error) {
+	re := regexp.MustCompile(`Ваш код для подтверждения авториазции:\s(\S+)\r\n`)
+	matches := re.FindStringSubmatch(input)
+
+	if len(matches) < 2 {
+		return "", fmt.Errorf("код авторизации не найден")
+	}
+
+	return matches[1], nil
 }
 
 func fetchCodeFromEmail(email, password string) (string, error) {
@@ -105,7 +116,8 @@ func fetchCodeFromEmail(email, password string) (string, error) {
 			continue
 		}
 		fmt.Printf("Текст письма:\n%s\n", string(body))
-		return strings.TrimSpace(string(body)), nil
+		// return strings.TrimSpace(string(body)), nil
+		return ExtractCode(string(body))
 	}
 
 	if err := <-done; err != nil {

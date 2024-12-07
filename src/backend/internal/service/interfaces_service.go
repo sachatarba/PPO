@@ -98,6 +98,6 @@ type (
 	}
 
 	ISmtpService interface {
-		SendMail(text string, receiver string) error
+		SendMail(text string, receiver string, subject string) error
 	}
 )
