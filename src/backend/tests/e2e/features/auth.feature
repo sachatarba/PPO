@@ -22,7 +22,12 @@ Feature: User Authentication
     When the user logs in
     Then the status code should be "200 OK"
     When the confirmation code is fetched from the email "sachatarba@rambler.ru"
-    And the user changes the password to "123456"
+    And the user confirms the account
+    Then the status code should be "200 OK"
+    When the user changes the password to "123456"
     Then the status code should be "200 OK"
     When the user logs in
+    Then the status code should be "200 OK"
+    When the confirmation code is fetched from the email "sachatarba@rambler.ru"
+    And the user confirms the account
     Then the status code should be "200 OK"
