@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -46,13 +47,15 @@ func (a *AuthorizationNewService) IsAuthorize(ctx context.Context, sessionID uui
 func (a *AuthorizationNewService) Authorize(ctx context.Context, login string, password string) (entity.Session, error) {
 	client, err := a.checkAuth(ctx, login, password)
 	if err != nil {
+		log.Println("Error", login, password, err)
 		return entity.Session{}, err
 	}
 
 	err = a.sendAndSaveCode(ctx, client.ID, client.Email)
-	if err != nil {
-		return entity.Session{}, err
-	}
+	log.Println("Error: ", login, password, err)
+	// if err != nil {
+	// 	return entity.Session{}, err
+	// }
 
 	return entity.Session{}, nil
 }
