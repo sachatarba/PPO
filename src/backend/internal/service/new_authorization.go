@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -206,7 +207,9 @@ func (a *AuthorizationNewService) sendAndSaveCode(ctx context.Context, id uuid.U
 	if err != nil {
 		return fmt.Errorf("can't save code %w", err)
 	}
-	message := fmt.Sprintf("Привет, %s!\r\n Ваш код для подтверждения авториазции: %s", email, code)
+
+	index := strings.IndexAny(email, "@")
+	message := fmt.Sprintf("Привет, %s!\r\n Ваш код для подтверждения авториазции: %s", email[:index], code)
 	err = a.smtpService.SendMail(message, email, subject)
 	if err != nil {
 		return fmt.Errorf("can't send email: %w", err)
