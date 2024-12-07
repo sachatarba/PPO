@@ -20,7 +20,7 @@ func NewSmtpService(config *config.SmtpConfig) *SmtpService {
 func (s *SmtpService) SendMail(text string, receiver string) error {
 	message := []byte("From: " + s.config.FromAddres + "\r\n" +
 		"To: " + receiver + "\r\n" +
-		"Subject: Ваш код подтверждения авторизации\r\n" +
+		"Subject: Код для прохождения двухфакторной авторизации\r\n" +
 		"\r\n" +
 		text + "\r\n")
 
