@@ -48,7 +48,7 @@ func ExtractCode(input string) (string, error) {
 
 	if len(matches) < 2 {
 		return "", fmt.Errorf("код авторизации не найден")
-	}
+	} 
 
 	return matches[1], nil
 }
