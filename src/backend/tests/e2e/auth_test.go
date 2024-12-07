@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/bool64/godogx/allure"
 	"github.com/cucumber/godog"
@@ -173,6 +174,7 @@ func (a *authFeature) theUserConfirmsTheAccount() error {
 		Raw()
 
 	a.status = response.Status
+	time.Sleep(time.Second * 2)
 	return nil
 }
 
