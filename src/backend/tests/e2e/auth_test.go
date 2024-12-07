@@ -43,7 +43,7 @@ func (a *authFeature) setup() {
 }
 
 func ExtractCode(input string) (string, error) {
-	re := regexp.MustCompile(`Ваш код для подтверждения авториазции:\s(\S+)\r\n`)
+	re := regexp.MustCompile(`Для подтверждения авториазции введите код:\s(\S+)\r\n`)
 	matches := re.FindStringSubmatch(input)
 
 	if len(matches) < 2 {
