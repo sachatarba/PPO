@@ -12,7 +12,7 @@ import (
 )
 
 type ApiServer struct {
-	conf config.Config
+	// conf config.Config
 }
 
 func (api *ApiServer) Run() {

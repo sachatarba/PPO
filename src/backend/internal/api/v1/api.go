@@ -20,7 +20,7 @@ const (
 var sleep = time.Second * 3
 
 type ApiServer struct {
-	conf config.Config
+	// conf config.Config
 }
 
 func (api *ApiServer) Run() {
