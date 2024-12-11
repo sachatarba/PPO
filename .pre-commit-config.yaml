@@ -11,5 +11,5 @@ repos:
     rev: v1.62.2
     hooks:
       - id: golangci-lint
-        args: ['run', '--fix', '--disable-all', '--enable=gocognit', '--enable=deadcode', '--enable=gocyclo']
-        files: ^.*\.go$
+        args: ['run', './...', '--fix', '--disable-all', '--enable=gocognit', '--enable=deadcode', '--enable=gocyclo']
+        # files: ^.*\.go$
