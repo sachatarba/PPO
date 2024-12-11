@@ -230,10 +230,10 @@ name: Lint
 on:
   push:
     branches:
-      - main
+      - linter
   pull_request:
     branches:
-      - main
+      - linter
 
 jobs:
   lint:
