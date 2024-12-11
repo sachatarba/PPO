@@ -1,15 +1,15 @@
-name: Test Pipeline
+# name: Test Pipeline
 
-on:
-  push:
-    branches:
-      - testing-and-web
-      - authorization
-  pull_request:
-    branches:
-      - testing-and-web  
+# on:
+#   push:
+#     branches:
+#       - testing-and-web
+#       - authorization
+#   pull_request:
+#     branches:
+#       - testing-and-web  
 
-jobs:
+# jobs:
   # unit_tests:
   #   outputs:
   #     skip: ${{ steps.set_skip.outputs.skip }}
@@ -225,3 +225,37 @@ jobs:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     publish_branch: gh-pages
       #     publish_dir: allure-history
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.20'
+
+      - name: Install dependencies
+        run: |
+          go mod tidy
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+          go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+
+      - name: Run linters
+        run: |
+          cd src/backend
+          golangci-lint run --fix --disable-all --enable=gocognit --enable=unused
+          gocyclo -over 10 .
