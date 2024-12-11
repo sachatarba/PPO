@@ -70,7 +70,7 @@ func (b *ScheduleBuilder) Build() entity.Schedule {
 		b.dayOfTheWeek = temp
 	}
 	if b.startTime == "" {
-		b.startTime = time.Now().Format(time.TimeOnly) 
+		b.startTime = time.Now().Format(time.TimeOnly)
 	}
 	if b.endTime == "" {
 		b.endTime = time.Now().Add(time.Hour).Format(time.TimeOnly)

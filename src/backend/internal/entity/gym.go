@@ -7,12 +7,12 @@ import (
 
 type Gym struct {
 	ID              uuid.UUID
-	Name            string  
+	Name            string
 	Phone           string
 	City            string
 	Addres          string
 	IsChain         bool
-	Trainers        []Trainer 
+	Trainers        []Trainer
 	Equipments      []Equipment
 	MembershipTypes []MembershipType
 }
@@ -22,5 +22,5 @@ func (g *Gym) Validate() bool {
 		return false
 	}
 
-	return g.Name != "" && g.City !=  "" && g.Addres != ""
+	return g.Name != "" && g.City != "" && g.Addres != ""
 }

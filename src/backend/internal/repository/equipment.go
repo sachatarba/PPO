@@ -37,9 +37,9 @@ func (r *EquipmentRepo) ChangeEquipment(ctx context.Context, equipment entity.Eq
 	tx := r.db.WithContext(ctx).Model(&orm.Equipment{
 		ID: equipment.ID,
 	}).UpdateColumns(&orm.Equipment{
-		Name: equipmentOrm.Name,
+		Name:        equipmentOrm.Name,
 		Description: equipmentOrm.Description,
-		GymID: equipmentOrm.GymID,
+		GymID:       equipmentOrm.GymID,
 	})
 
 	return tx.Error

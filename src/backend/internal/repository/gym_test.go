@@ -361,7 +361,7 @@ func (s *GymRepoSuite) TestGymOperations(t provider.T) {
 	}
 
 	for _, tc := range testCases {
-		t.Run(fmt.Sprintf("Gym test with data base: %d",tc.name), func(t provider.T) {
+		t.Run(fmt.Sprintf("Gym test with data base: %d", tc.name), func(t provider.T) {
 			t.WithNewStep("Gym case", func(sCtx provider.StepCtx) {
 				switch tc.name {
 				case REGISTER:

@@ -57,12 +57,10 @@ func (b *GymBuilder) Build() entity.Gym {
 }
 
 func (b *GymBuilder) Invalid() *GymBuilder {
-	b.gym.Name = ""         
-	b.gym.Addres = ""       
-	b.gym.Phone = "invalid" 
-	b.gym.City = ""         
+	b.gym.Name = ""
+	b.gym.Addres = ""
+	b.gym.Phone = "invalid"
+	b.gym.City = ""
 	b.gym.IsChain = false
 	return b
 }
-
-

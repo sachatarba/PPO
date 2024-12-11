@@ -22,6 +22,6 @@ var (
 
 	// Autorization errors
 	ErrSessionNotFound = errors.New("session not found")
-	ErrWrongLogin    = errors.New("wrong login")
-	ErrWrongPassword = errors.New("wrong password")
+	ErrWrongLogin      = errors.New("wrong login")
+	ErrWrongPassword   = errors.New("wrong password")
 )

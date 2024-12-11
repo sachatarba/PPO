@@ -12,12 +12,12 @@ type MembershipTypeBuilder struct {
 func NewMembershipTypeBuilder() *MembershipTypeBuilder {
 	return &MembershipTypeBuilder{
 		membershipType: entity.MembershipType{
-			ID:           uuid.New(),              
-			Type:         "Standard",              
-			Description:  "Basic membership type", 
-			Price:        "100.00",                
-			DaysDuration: 30,                      
-			GymID:        uuid.New(),              
+			ID:           uuid.New(),
+			Type:         "Standard",
+			Description:  "Basic membership type",
+			Price:        "100.00",
+			DaysDuration: 30,
+			GymID:        uuid.New(),
 		},
 	}
 }

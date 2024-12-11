@@ -133,7 +133,7 @@ func (h *AuthHandler) ChangePassword(ctx *gin.Context) {
 
 func (h *AuthHandler) Confirm2FA(ctx *gin.Context) {
 	log.Println("Confirm2FA req:", ctx.Request)
-	
+
 	var confirmReq request.ConfirmReq
 	err := ctx.BindJSON(&confirmReq)
 	if err != nil {
@@ -177,7 +177,6 @@ func (h *AuthHandler) Confirm2FA(ctx *gin.Context) {
 	http.SetCookie(ctx.Writer, cookie)
 	ctx.JSON(http.StatusOK, gin.H{"session": session})
 }
-
 
 func (h *AuthHandler) RegisterNewUser(ctx *gin.Context) {
 	log.Print("RegisterNewUser request:", ctx.Request)

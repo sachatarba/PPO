@@ -7,12 +7,11 @@ import (
 	"github.com/sachatarba/course-db/internal/entity"
 )
 
-
 type GymService struct {
 	gymRepo IGymRepository
 }
 
-func NewGymService(gymRepo IGymRepository) IGymService{
+func NewGymService(gymRepo IGymRepository) IGymService {
 	return &GymService{
 		gymRepo: gymRepo,
 	}
@@ -22,7 +21,7 @@ func (s *GymService) RegisterNewGym(ctx context.Context, gym entity.Gym) error {
 	if !gym.Validate() {
 		return ErrValidation
 	}
-	
+
 	err := s.gymRepo.RegisterNewGym(ctx, gym)
 
 	return err

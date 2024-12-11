@@ -17,7 +17,7 @@ const (
 	// sleep = 3000
 )
 
-var sleep = time.Second * 3  
+var sleep = time.Second * 3
 
 type ApiServer struct {
 	conf config.Config
@@ -32,7 +32,6 @@ func (api *ApiServer) Run() {
 	redisConnector := redis_adapter.RedisConnector{
 		Conf: conf.RedisConf,
 	}
-
 
 	db, err := postgresConnector.Connect()
 	for i := 0; i < retries && err != nil; i++ {

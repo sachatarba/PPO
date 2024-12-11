@@ -31,7 +31,7 @@ func (m *ClientMembership) Validate() bool {
 	}
 	m.EndDate = endDate.Format(time.DateOnly)
 
-	if (!startDate.Before(endDate)) {
+	if !startDate.Before(endDate) {
 		log.Println("not before:")
 	}
 

@@ -29,7 +29,7 @@ func (server *Server) Run() {
 	server.Handler.InitApi(router)
 
 	serv := &http.Server{
-		Addr:    ":8080", 
+		Addr:    ":8080",
 		Handler: router,
 	}
 

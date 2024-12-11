@@ -1,6 +1,5 @@
 package rest
 
-
 import (
 	"log"
 	"net/http"
@@ -8,19 +7,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/sachatarba/course-db/internal/delivery/v2/dto"
-	"github.com/sachatarba/course-db/internal/service"
 	"github.com/sachatarba/course-db/internal/entity"
+	"github.com/sachatarba/course-db/internal/service"
 )
 
 type ClientMembershipHandler struct {
-	clientMembershipService	service.IClientMembershipsService
+	clientMembershipService service.IClientMembershipsService
 }
 
 func NewClientMembershipHandler(
-	clientMembershipService service.IClientMembershipsService) (*ClientMembershipHandler) {
-		return &ClientMembershipHandler{
-			clientMembershipService: clientMembershipService,
-		}
+	clientMembershipService service.IClientMembershipsService) *ClientMembershipHandler {
+	return &ClientMembershipHandler{
+		clientMembershipService: clientMembershipService,
+	}
 }
 
 func (h *ClientMembershipHandler) GetClientMemberships(ctx *gin.Context) {

@@ -213,7 +213,7 @@ func (a *AuthorizationNewService) sendAndSaveCode(ctx context.Context, id uuid.U
 	err = a.smtpService.SendMail(message, email, subject)
 	if err != nil {
 		return fmt.Errorf("can't send email: %w", err)
-	} 
+	}
 
 	return nil
 }

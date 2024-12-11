@@ -17,7 +17,7 @@ type ApiServicesDirector struct {
 	Builder IApiServicesBuilder
 }
 
-func (director *ApiServicesDirector) NewServices() (*service.ApiServices, error){
+func (director *ApiServicesDirector) NewServices() (*service.ApiServices, error) {
 	err := director.Builder.buildRepos()
 	if err != nil {
 		return nil, err
@@ -30,7 +30,6 @@ func (director *ApiServicesDirector) NewServices() (*service.ApiServices, error)
 
 	return director.Builder.getResult(), nil
 }
-
 
 type ApiServicesBuilder struct {
 	Postgres *gorm.DB

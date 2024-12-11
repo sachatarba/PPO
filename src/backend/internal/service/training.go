@@ -40,7 +40,7 @@ func (s *TrainingService) ChangeTraining(ctx context.Context, training entity.Tr
 
 func (s *TrainingService) DeleteTraining(ctx context.Context, trainingID uuid.UUID) error {
 	err := s.trainingRepo.DeleteTraining(ctx, trainingID)
-	
+
 	return err
 }
 

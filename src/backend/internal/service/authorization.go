@@ -70,7 +70,7 @@ func (a *AuthorizationService) Register(ctx context.Context, client entity.Clien
 	}
 
 	err = a.sessionRepo.CreateNewSession(ctx, session)
-		if err != nil {
+	if err != nil {
 		return entity.Session{}, err
 	}
 
@@ -97,7 +97,6 @@ func (a *AuthorizationService) Logout(ctx context.Context, sessionID uuid.UUID) 
 	return session, nil
 }
 
-
 func (a *AuthorizationService) DeleteClient(ctx context.Context, clientID uuid.UUID) (entity.Session, error) {
 	err := a.clientService.DeleteClient(ctx, clientID)
 	if err != nil {
@@ -114,7 +113,7 @@ func (a *AuthorizationService) Confirm2FA(ctx context.Context, clientID uuid.UUI
 }
 
 func (a *AuthorizationService) CreateSession(ctx context.Context, clientID uuid.UUID) (entity.Session, error) {
-	return entity.Session{}, fmt.Errorf("not implemented") 
+	return entity.Session{}, fmt.Errorf("not implemented")
 }
 
 func (a *AuthorizationService) ChangePassword(ctx context.Context, login string, password string, newPassword string) error {

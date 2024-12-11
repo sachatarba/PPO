@@ -37,7 +37,7 @@ func (r *ClientMembershipRepo) ChangeClientMembership(ctx context.Context, clien
 	tx := r.db.WithContext(ctx).Model(orm.ClientMembership{ID: membership.ID}).Updates(
 		map[string]interface{}{
 			"start_date": membership.StartDate,
-			"end_date": membership.EndDate,
+			"end_date":   membership.EndDate,
 		},
 	)
 
@@ -58,8 +58,8 @@ func (r *ClientMembershipRepo) GetClientMembershipByID(ctx context.Context, clie
 		ID: clientMembershipID,
 	}
 	tx := r.db.WithContext(ctx).
-	Preload("MembershipType").
-	First(&membership)
+		Preload("MembershipType").
+		First(&membership)
 
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		tx.Error = errors.Join(service.ErrGetByIDNotFound, tx.Error)
@@ -76,7 +76,7 @@ func (r *ClientMembershipRepo) GetClientMembershipByID(ctx context.Context, clie
 
 func (r *ClientMembershipRepo) ListClientMembershipsByClientID(ctx context.Context, clientID uuid.UUID) ([]entity.ClientMembership, error) {
 	var memberships []orm.ClientMembership
-	
+
 	tx := r.db.WithContext(ctx).Preload("MembershipType").Where(&orm.ClientMembership{ClientID: clientID}).Find(&memberships)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		tx.Error = errors.Join(tx.Error, service.ErrListByIDNotFound)

@@ -31,7 +31,7 @@ func (t *Training) Validate() bool {
 	for id := range TrainingType {
 		if value := TrainingType[id]; value == t.TrainingType {
 			found = true
-		} 
+		}
 	}
 
 	if !found {

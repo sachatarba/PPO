@@ -12,4 +12,3 @@ type ClientMembership struct {
 	MembershipType   MembershipType
 	ClientID         uuid.UUID
 }
-

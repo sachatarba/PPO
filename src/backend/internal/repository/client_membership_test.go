@@ -10,10 +10,10 @@ import (
 	"github.com/ozontech/allure-go/pkg/framework/provider"
 	"github.com/ozontech/allure-go/pkg/framework/suite"
 	"github.com/sachatarba/course-db/internal/entity"
-	"github.com/sachatarba/course-db/internal/utils/builder"
-	"github.com/sachatarba/course-db/internal/utils/fabric"
 	"github.com/sachatarba/course-db/internal/repository/mocks"
 	"github.com/sachatarba/course-db/internal/service"
+	"github.com/sachatarba/course-db/internal/utils/builder"
+	"github.com/sachatarba/course-db/internal/utils/fabric"
 )
 
 type ClientMembershipRepoSuite struct {

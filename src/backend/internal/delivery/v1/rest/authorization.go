@@ -80,14 +80,14 @@ func (h *Handler) Login(ctx *gin.Context) {
 	}
 
 	cookie := &http.Cookie{
-		Name:    "session",
-		Value:   session.SessionID.String(),
-		Path:    "/",
-		Domain:  "localhost", 
-		Expires: session.TTL, 
+		Name:     "session",
+		Value:    session.SessionID.String(),
+		Path:     "/",
+		Domain:   "localhost",
+		Expires:  session.TTL,
 		HttpOnly: true,
 		Secure:   false,
-		SameSite: http.SameSiteLaxMode, 
+		SameSite: http.SameSiteLaxMode,
 	}
 
 	http.SetCookie(ctx.Writer, cookie)

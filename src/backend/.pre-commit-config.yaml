@@ -1,0 +1,27 @@
+repos:
+  # - repo: https://github.com/golangci/golangci-lint
+  #   rev: v1.62.2
+  #   hooks:
+  #     - id: golangci-lint
+  #       # files: ^src/backend/.*\.go$
+
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: master
+    hooks:
+      # - id: go-fmt
+      # - id: go-vet
+      # - id: go-lint
+      # - id: go-imports
+      - id: go-cyclo
+        args: ['src/backend/', '-over=5']
+      # - id: validate-toml
+      # - id: no-go-testing
+      - id: golangci-lint
+        working_directory: src/backend/bebra
+        files: ^src/backend/.*\.go$
+        args: ['run', '--fix', '--disable-all', '--enable=gocognit', '--enable=unused']
+        # working_directory: src/backend/bebra
+      # - id: go-critic
+      # - id: go-unit-tests
+      # - id: go-build
+      # - id: go-mod-tidy

@@ -9,10 +9,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/gin-swagger"
 	"github.com/sachatarba/course-db/internal/config"
 	handler "github.com/sachatarba/course-db/internal/delivery/v2/rest"
-	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 )
 
 type ServiceHandlers interface {
@@ -31,7 +30,7 @@ func (server *Server) Run() {
 	router.Static("/docs", "./internal/server/v2/docs")
 	url := ginSwagger.URL("/docs/openapi.yaml")
 	log.Println(os.Getwd())
-    router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	// rouer.GET()
 	router.GET("/ping", func(ctx *gin.Context) {
 		ctx.Status(http.StatusOK)
@@ -40,7 +39,7 @@ func (server *Server) Run() {
 	server.Handlers.InitHandlers(router)
 
 	serv := &http.Server{
-		Addr:    ":"+server.Conf.Port,
+		Addr:    ":" + server.Conf.Port,
 		Handler: router,
 	}
 

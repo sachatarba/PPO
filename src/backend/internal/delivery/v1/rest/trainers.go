@@ -62,13 +62,13 @@ func (h *Handler) CreateNewTrainer(ctx *gin.Context) {
 	}
 
 	err = h.trainerService.RegisterNewTrainer(ctx.Request.Context(), entity.Trainer{
-		ID: req.ID,
-		Fullname: req.Fullname,
-		Email: req.Email,
-		Phone: req.Phone,
+		ID:            req.ID,
+		Fullname:      req.Fullname,
+		Email:         req.Email,
+		Phone:         req.Phone,
 		Qualification: req.Qualification,
-		UnitPrice: req.UnitPrice,
-		GymsID: req.GymsID,
+		UnitPrice:     req.UnitPrice,
+		GymsID:        req.GymsID,
 	})
 	if err != nil {
 		log.Print(err)
@@ -93,13 +93,13 @@ func (h *Handler) ChangeTrainer(ctx *gin.Context) {
 	}
 
 	err = h.trainerService.ChangeTrainer(ctx.Request.Context(), entity.Trainer{
-		ID: req.ID,
-		Fullname: req.Fullname,
-		Email: req.Email,
-		Phone: req.Phone,
+		ID:            req.ID,
+		Fullname:      req.Fullname,
+		Email:         req.Email,
+		Phone:         req.Phone,
 		Qualification: req.Qualification,
-		UnitPrice: req.UnitPrice,
-		GymsID: req.GymsID,
+		UnitPrice:     req.UnitPrice,
+		GymsID:        req.GymsID,
 	})
 	if err != nil {
 		log.Print(err)

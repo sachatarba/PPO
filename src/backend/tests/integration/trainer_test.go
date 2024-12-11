@@ -73,7 +73,6 @@ func (s *TrainerServiceSuite) AfterAll(t provider.T) {
 	}
 }
 
-
 // Тест изменения данных тренера
 func (s *TrainerServiceSuite) TestChangeTrainer(t provider.T) {
 	if os.Getenv("SKIP") == "true" {

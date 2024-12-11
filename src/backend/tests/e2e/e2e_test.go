@@ -178,7 +178,6 @@ func (s *E2ESuite) TestClientMembershipHandlerPostClientMembership(t provider.T)
 	})
 }
 
-
 func TestE2e2SuiteRunner(t *testing.T) {
 	suite.RunSuite(t, new(E2ESuite))
 }

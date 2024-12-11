@@ -3,9 +3,9 @@ package builder
 import (
 	"time"
 
+	"github.com/go-faker/faker/v4"
 	"github.com/google/uuid"
 	"github.com/sachatarba/course-db/internal/entity"
-	"github.com/go-faker/faker/v4"
 )
 
 type ClientBuilder struct {
@@ -74,13 +74,13 @@ func (b *ClientBuilder) AddSchedule(schedule entity.Schedule) *ClientBuilder {
 }
 
 func (b *ClientBuilder) Invalid() *ClientBuilder {
-	b.client.ID = uuid.Nil              
-	b.client.Login = ""                 
-	b.client.Password = ""              
-	b.client.Fullname = ""              
-	b.client.Email = "invalid-email"    
-	b.client.Phone = "invalid-phone"    
-	b.client.Birthdate = "invalid-date" 
+	b.client.ID = uuid.Nil
+	b.client.Login = ""
+	b.client.Password = ""
+	b.client.Fullname = ""
+	b.client.Email = "invalid-email"
+	b.client.Phone = "invalid-phone"
+	b.client.Birthdate = "invalid-date"
 
 	return b
 }

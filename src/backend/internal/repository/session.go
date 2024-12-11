@@ -34,7 +34,6 @@ func (r *SessionRepo) CreateNewSession(ctx context.Context, session entity.Sessi
 		return err
 	}
 
-
 	sessionKey := "session:" + session.SessionID.String()
 	err = r.client.Set(ctx, sessionKey, data, time.Until(session.TTL)).Err()
 	if err != nil {
@@ -130,7 +129,7 @@ func (r *SessionRepo) GetSessionBySessionID(ctx context.Context, sessionID uuid.
 		if errors.Is(err, redis.Nil) {
 			errors.Join(service.ErrSessionNotFound)
 		}
-		
+
 		return entity.Session{}, err
 	}
 

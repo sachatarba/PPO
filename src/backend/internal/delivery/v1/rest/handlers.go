@@ -17,7 +17,7 @@ func (h *PaymentHandler) InitPayment(router gin.IRouter) {
 
 func NewPaymentHandler(conf *config.PaymentApiConfig) *PaymentHandler {
 	return &PaymentHandler{
-		ApiKey:    conf.ApiKey,
+		ApiKey: conf.ApiKey,
 		ShopID: conf.ShopID,
 	}
 }

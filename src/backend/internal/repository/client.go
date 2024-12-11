@@ -47,7 +47,7 @@ func (r *ClientRepo) GetClientByID(ctx context.Context, clientID uuid.UUID) (ent
 	client := orm.Client{
 		ID: clientID,
 	}
-	
+
 	tx := r.db.WithContext(ctx).First(&client)
 	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		tx.Error = errors.Join(service.ErrGetByIDNotFound, tx.Error)

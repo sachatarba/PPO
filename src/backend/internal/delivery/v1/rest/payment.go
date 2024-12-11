@@ -61,4 +61,3 @@ func (p *PaymentHandler) CreatePayment(c *gin.Context) {
 
 	c.JSON(http.StatusOK, payment)
 }
-
