@@ -250,6 +250,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd src/backend
           go mod tidy
           go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
           go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
