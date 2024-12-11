@@ -1,12 +1,15 @@
-- repo: https://github.com/fzipp/gocyclo
-  rev: v0.3.0
-  hooks:
-    - id: gocyclo
-      args: ['-over', '10']  
+# .pre-commit-config.yaml
 
-- repo: https://github.com/golangci/golangci-lint
-  rev: v1.52.2
-  hooks:
-    - id: golangci-lint
-      args: ['run', '--fix', '--disable-all', '--enable=gocognit', '--enable=deadcode']
-      files: \.(go)$  
+repos:
+  # - repo: https://github.com/fzipp/gocyclo
+  #   rev: v0.3.0
+  #   hooks:
+  #     - id: gocyclo
+  #       args: ['-over', '10']
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.62.2
+    hooks:
+      - id: golangci-lint
+        args: ['run', '--fix', '--disable-all', '--enable=gocognit', '--enable=deadcode']
+        files: \.(go)$
