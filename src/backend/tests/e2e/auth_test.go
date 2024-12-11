@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -48,31 +47,60 @@ func ExtractCode(input string) (string, error) {
 
 	if len(matches) < 2 {
 		return "", fmt.Errorf("код авторизации не найден")
-	} 
+	}
 
 	return matches[1], nil
 }
 
 func fetchCodeFromEmail(email, password string) (string, error) {
-	c, err := client.DialTLS("imap.rambler.ru:993", &tls.Config{})
+	c, err := connectToIMAPServer()
 	if err != nil {
 		return "", fmt.Errorf("Ошибка подключения к серверу: %v", err)
 	}
 	defer c.Logout()
 
-	if err := c.Login(email, password); err != nil {
+	if err := authenticateIMAP(c, email, password); err != nil {
 		return "", fmt.Errorf("Ошибка аутентификации: %v", err)
 	}
 
-	mbox, err := c.Select("INBOX", false)
+	mbox, err := selectMailbox(c, "INBOX")
 	if err != nil {
-		return "", fmt.Errorf("Ошибка выбора папки: %v", err)
+		return "", err
 	}
 
+	msg, err := fetchLatestMessage(c, mbox)
+	if err != nil {
+		return "", err
+	}
+
+	body, err := extractMessageBody(msg)
+	if err != nil {
+		return "", err
+	}
+
+	return ExtractCode(body)
+}
+
+func connectToIMAPServer() (*client.Client, error) {
+	return client.DialTLS("imap.rambler.ru:993", &tls.Config{})
+}
+
+func authenticateIMAP(c *client.Client, email, password string) error {
+	return c.Login(email, password)
+}
+
+func selectMailbox(c *client.Client, mailbox string) (*imap.MailboxStatus, error) {
+	mbox, err := c.Select(mailbox, false)
+	if err != nil {
+		return nil, fmt.Errorf("Ошибка выбора папки: %v", err)
+	}
 	if mbox.Messages == 0 {
-		return "", fmt.Errorf("Ошибка выбора папки: %v", err)
+		return nil, fmt.Errorf("Папка пуста")
 	}
+	return mbox, nil
+}
 
+func fetchLatestMessage(c *client.Client, mbox *imap.MailboxStatus) (*imap.Message, error) {
 	seqset := new(imap.SeqSet)
 	seqset.AddNum(mbox.Messages)
 
@@ -86,12 +114,18 @@ func fetchCodeFromEmail(email, password string) (string, error) {
 
 	msg := <-messages
 	if msg == nil {
-		return "", fmt.Errorf("Сообщение не найдено")
+		return nil, fmt.Errorf("Сообщение не найдено")
 	}
 
-	fmt.Printf("Тема: %s\n", msg.Envelope.Subject)
-	fmt.Printf("От кого: %s\n", msg.Envelope.From[0].Address())
+	if err := <-done; err != nil {
+		return nil, fmt.Errorf("Ошибка загрузки сообщения: %v", err)
+	}
 
+	return msg, nil
+}
+
+func extractMessageBody(msg *imap.Message) (string, error) {
+	section := &imap.BodySectionName{}
 	r := msg.GetBody(section)
 	if r == nil {
 		return "", fmt.Errorf("Ошибка чтения тела сообщения")
@@ -108,23 +142,17 @@ func fetchCodeFromEmail(email, password string) (string, error) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Ошибка чтения части письма: %v", err)
+			return "", fmt.Errorf("Ошибка чтения части письма: %v", err)
 		}
 
 		body, err := io.ReadAll(part.Body)
 		if err != nil {
 			continue
 		}
-		fmt.Printf("Текст письма:\n%s\n", string(body))
-		// return strings.TrimSpace(string(body)), nil
-		return ExtractCode(string(body))
+		return string(body), nil
 	}
 
-	if err := <-done; err != nil {
-		return "", fmt.Errorf("Ошибка загрузки сообщения: %v", err)
-	}
-
-	return "", err
+	return "", fmt.Errorf("Сообщение не содержит текста")
 }
 
 func (a *authFeature) aUserWithDetails(table *godog.Table) error {
